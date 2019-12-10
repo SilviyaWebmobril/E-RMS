@@ -8,7 +8,7 @@ export default class CustomHeaderDepartment extends Component {
 
 
     render(){
-        console.log("NAME",this.props.name)
+        console.log("NAME",this.props.nav)
         return(
             <View style={styles.blueBoxes}>
                 <View style={styles.headerStyle}>
@@ -16,7 +16,7 @@ export default class CustomHeaderDepartment extends Component {
                         <Image  source= {require('../../assets/back.png')} style={styles.menyuStyle} />
                     </TouchableOpacity>
                     
-                <Text style={styles.headerText}>Warehouse 1: {this.props.name}</Text>
+                <Text style={styles.headerText}>{this.props.name}</Text>
                 </View>
                 {/* <View style={styles.searchStyle}> 
                 <Image source={require('../../assets/eye-cross.png')} style={styles.serachImage} />
@@ -49,22 +49,23 @@ const styles  = StyleSheet.create({
         alignItems:"flex-start",
         alignSelf:"flex-start",
         flexDirection:'row',
-        marginTop:20
+        marginTop:30,
+
     
 
     },
     menyuStyle:{
         width:30,
         height:30,
-        marginTop:0
+        marginTop:4
         
     },
     headerText:{
         fontWeight:"bold",
         fontSize:20,
         color:"white",
-        marginTop:0,
-        marginLeft:20
+        marginTop:5,
+        marginLeft:30
     },
     searchStyle:{
         width:"100%",

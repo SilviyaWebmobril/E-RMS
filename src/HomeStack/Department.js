@@ -3,6 +3,8 @@ import {View ,Text,Image, TocuhableOpacity,StyleSheet,FlatList,TouchableOpacity}
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import CustomHeaderDepartment from '../CustomUI/CustomHeaderDepartment';
 import CategoryItem from '../HomeStack/CategoryItem';
+import Axios from 'axios';
+import ApiUrl from '../Utility/ApiUrl';
 export default class Department extends Component {
 
 
@@ -15,19 +17,37 @@ export default class Department extends Component {
       };
 
       state= {
-          forms:[
-              {'id':1,'value':'QF001 Form'},
-              {'id':2,'value':'QF002 Receiving'},
-              {'id':3,'value':'QF003 Shipping'},
-              {'id':4,'value':'QF003 Sreddy'}
-          ]
+        forms:[],
+        message:""
+    }
+
+      componentDidMount(){
+
+        var formdata = new FormData();
+        formdata.append("department_id",this.props.navigation.getParam('result')['id']);
+        Axios.post(ApiUrl.base_url+ApiUrl.view_department_form,formdata).then(response=>{
+
+
+            if(response.data.error){
+                this.setState({message:`${response.data.message}`})
+               // alert("Something wenrt wrong please try again later!")                
+            }else{
+
+                this.setState({forms:response.data.data});
+            }
+
+        }).catch(error =>{
+            console.log("error",error);
+        })
       }
+
+    
 
       renderItem(data){
         let { item, index } = data;
        
         return(
-            <TouchableOpacity >
+            <TouchableOpacity  onPress={()=>{ this.props.navigation.navigate('DepartmentForm',{department_id : item.id,name :item.name})}}>
                 <CategoryItem data={item} />
             </TouchableOpacity>
            
@@ -39,31 +59,42 @@ export default class Department extends Component {
 
     render(){
         return(
-            <KeyboardAwareScrollView>
-                <View style={{flex:1}}>
-                   <View style={styles.btnView}>
-                       <TouchableOpacity style={styles.correctiveBtn}>
-                           <Text style={styles.textStyle}>Corrective Action Form</Text>
-                       </TouchableOpacity>
-                       <TouchableOpacity style={styles.holdBtn}>
-                           <Text style={styles.textStyle}>Hold</Text>
-                       </TouchableOpacity>
-                   </View>
+            <View style={{flex:1}}>
+                <KeyboardAwareScrollView>
+                    <View style={{flex:1}}>
+                    <View style={styles.btnView}>
+                        <TouchableOpacity style={styles.correctiveBtn}>
+                            <Text style={styles.textStyle}>Corrective Action Form</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.holdBtn}>
+                            <Text style={styles.textStyle}>Hold</Text>
+                        </TouchableOpacity>
+                    </View>
 
-                   <FlatList
-                      numColumns={2}
-                      data={this.state.forms}
-                      keyExtractor={(item, index) => index.toString()}
-                      renderItem={(item) =>this.renderItem(item)}
-                      style={{paddingBottom:10}}
-                      columnWrapperStyle={{flexGrow: 1, justifyContent: 'space-around',marginTop:15}}
-                      />
+                    <FlatList
+                        numColumns={2}
+                        data={this.state.forms}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={(item) =>this.renderItem(item)}
+                        style={{paddingBottom:10}}
+                        columnWrapperStyle={{flexGrow: 1, justifyContent: 'space-around',marginTop:15}}
+                        />
+                    
+
+
+
+                    </View>
                 
-
-
-
-                </View>
-            </KeyboardAwareScrollView>
+                </KeyboardAwareScrollView>
+                {this.state.message
+                ?
+                    <Text style={{alignSelf:"center",flex:1,justifyContent:"center" ,fontWeight:"bold",fontSize:15,color:"#808080"}}>{this.state.message}</Text>
+                :
+                    <View/>
+                }
+            </View>
+            
+           
         )
     }
 }

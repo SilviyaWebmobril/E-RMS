@@ -1,11 +1,13 @@
 import React ,{Component }  from 'react';
-import {View ,Text, Image ,ScrollView,ActivityIndicator,ImageBackground,StyleSheet,Dimensions} from 'react-native';
+import {View ,Text, Image ,ScrollView,ActivityIndicator,ImageBackground,StyleSheet,Dimensions,TouchableOpacity} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import CustomButton from '../CustomUI/CustomButton';
 import { CustomTextInput } from '../CustomUI/CustomTextInput';
 import Colors from '../Utility/Colors';
-
-
+import Axios from 'axios';
+import ApiUrl from '../Utility/ApiUrl';
+import AsyncStorage from '@react-native-community/async-storage';
+import CustomAlert from '../CustomUI/CustomAlert';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
@@ -17,26 +19,91 @@ export default class SignUp extends Component{
         super(props);
         this.state ={
             isSec :true,
-            loading:false
+            loading:false,
+            visible:false,
+            errorDesp:"",
+            errorHeading:""
         }
     }
-    componentDidMount(){
-        console.log("hbkjkm");
-    }
-
-
+    
     visitorHandler = () =>{
 
         this.props.navigation.navigate('Visitor');
     }
 
     signInHandler = () =>{
-        this.props.navigation.navigate('HomeDrawer')
+
+        if(this.refs.email.getInputTextValue('email') == "invalid"){
+
+            this.setState({visible:true});
+            this.setState({errorDesp:'Please enter valid email'});
+            this.setState({errorHeading:'SignUp'});
+            return;
+
+        }
+
+        if(this.refs.password.getInputTextValue('password') == "invalid"){
+
+            this.setState({visible:true});
+            this.setState({errorDesp:'Please enter valid password'});
+            this.setState({errorHeading:'SignUp'});
+            return;
+        }
+
+        if(this.refs.email.getInputTextValue('email') !== "invalid" || this.refs.password.getInputTextValue('password') !== "invalid"){
+            this.setState({loading:true})
+            let formdata  = new FormData();
+            formdata.append("email",this.refs.email.getInputTextValue('email'));
+            formdata.append("password",this.refs.password.getInputTextValue('password'));
+            Axios.post(ApiUrl.base_url+ ApiUrl.login,formdata).then(response => {
+
+                this.setState({loading:false})
+
+                if(response.data.error){
+                   
+                    this.setState({visible:true});
+                    this.setState({errorDesp:`${response.data.message}`});
+                    this.setState({errorHeading:'SignUp'});
+                }else{
+
+                    AsyncStorage.setItem('id',JSON.stringify(response.data.result.id));
+                    AsyncStorage.setItem('roles_id',JSON.stringify(response.data.result.roles_id));
+                   // AsyncStorage.setItem('email',esponse.data.result.email)
+
+                    this.props.navigation.navigate('HomeDrawer')
+                }
+               
+
+            }).catch(error => {
+                this.setState({loading:false})
+                this.setState({visible:true});
+                this.setState({errorDesp:'Something went wrong! Please try again later'});
+                this.setState({errorHeading:'SignUp'});
+                
+               
+            })
+        }else{  
+            
+            this.setState({visible:true});
+            this.setState({errorDesp:'Please enter email and password'});
+            this.setState({errorHeading:'SignUp'});
+            
+        }
+        
+       
+    }
+
+    forgetPassword = async() => {
+
+
+        this.props.navigation.navigate('ForgetPassword');
+      
+    
     }
 
 
     render(){
-        console.log("on renser")
+       
         return(
                       
             <ImageBackground style={styles.imageBck} source={require('../../assets/splash3.png')}>
@@ -47,12 +114,12 @@ export default class SignUp extends Component{
                         <Text style={styles.signInText}>Sign In</Text>
 
                         <CustomTextInput 
-                            ref="name"   
-                            image_style={{width:30,height:30,marginTop:10,marginRight:5}} 
-                            placeholder="Enter Username"
-                            text="Username"
-                            inputType="name"
-                            error_text="Please Enter Valid Username"
+                            ref="email"   
+                            field_text={{marginBottom:10}}
+                            placeholder="Enter Email"
+                            text="EMAIL"
+                            inputType="email"
+                            error_text="Please enter valid email."
                             />
                             <CustomTextInput 
                             ref="password"
@@ -61,10 +128,12 @@ export default class SignUp extends Component{
                             inputType="password"
                             isPassword={true}
                             changeSecureText={()=> this.changeSecureText} // calling child function directly without ref in component
-                            error_text="Password must be greater than 6"
+                            error_text="Password must be of minimum 6 characters"
                             />
-
-                            <Text style={{alignSelf:'flex-end',marginRight:20,fontWeight:"bold",color:"red",marginBottom:20}}>Forgot Password ?</Text>
+                            <TouchableOpacity onPress={()=>this.forgetPassword()}>
+                                <Text style={{alignSelf:'flex-end',marginRight:20,fontWeight:"bold",color:"red",marginBottom:20}}>Forgot Password ?</Text>
+                            </TouchableOpacity>
+                           
                         
                             <CustomButton text=" Sign In " onPressHandler={()=>{this.signInHandler()}} view_button={{backgroundColor:Colors.blue_btn,borderColor:Colors.blue_btn}} btn_style={{height:40}}/>
                             <CustomButton text=" Visitor/ Contractor Sign In " onPressHandler={()=>{ this.visitorHandler()}} view_button={{backgroundColor:Colors.black_btn,borderColor:Colors.black_btn,marginTop:0, height:40}} btn_style={{height:40}}/>
@@ -75,6 +144,26 @@ export default class SignUp extends Component{
                         
                     </View>
                 </KeyboardAwareScrollView>
+                { this.state.loading && <View
+                     style={[
+                       StyleSheet.absoluteFill,
+                       { backgroundColor: 'rgba(0, 0, 0, 0.7)', justifyContent: 'center' }
+                     ]}
+                    >
+                     <ActivityIndicator size="large" />
+                   </View>}
+
+                   {this.state.visible 
+                    ?
+                    <CustomAlert isVisible={this.state.visible} 
+                        errorHeading={this.state.errorHeading}
+                        errorDescription={this.state.errorDesp}
+                        cancelVisible={false} 
+                        onOKPress={()=>{this.setState({visible:false})}} />
+                    :
+                    <View/>
+                }
+     
         </ImageBackground>
 
         )

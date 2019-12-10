@@ -79,12 +79,12 @@ export default class  SideBar extends Component  {
       removeData = async()=>{
        
        console.log("on remove");
-        const keys = ['token', 'name','email','profile']
+        const keys = ['id', 'roles_id',]
         try {
             AsyncStorage.clear();
             this.props.navigation.toggleDrawer()
        
-        this.props.navigation.navigate('SignIn');
+        this.props.navigation.navigate('SignUpStack');
        
         } catch(e) {
         // remove error
@@ -99,25 +99,134 @@ export default class  SideBar extends Component  {
 
             <View style={styles.container}>
                 <View>
-                  
-                        <TouchableOpacity
-                        onPress={()=>{this.props.navigation.toggleDrawer()}}>
-                            {/* <Image  style={styles.crossButton} source={require('../../Assets/cross_mark.png')} /> */}
-                        </TouchableOpacity>
-                
-
+                    <View style={{height:120,backgroundColor:"white",justifyContent:"center"}}>
+                        <Image source={require('../../assets/logo_small.png')} resizeMode="contain" style={styles.ermslogo} />
+                    </View>
+                    
                    
-                    {/* <Text style={styles.nameStyle}>{this.state.name}</Text>
-                    <Text style={styles.emailStyle}>{this.state.email}</Text>
-                    <View style={styles.viewStyle}></View>
+                    
                     <TouchableOpacity
                     onPress={() => {
                         this.props.navigation.toggleDrawer()
                        
                         }}>
-                        <Text style={styles.headingStyle}> Home </Text>
+                        <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start"}}>
+                            <Image source={require('../../assets/sidebar/1.png')} resizeMode="contain" style={styles.imageStyle} />
+                            <Text style={styles.headingStyle}> Home </Text>
+                        </View>
+                       
                     </TouchableOpacity>
-                    <TouchableOpacity 
+                   
+                    <TouchableOpacity
+                     onPress={() => {
+                        
+                        this.props.navigation.navigate('SavedForm')
+                        const resetAction = StackActions.reset({
+                            index: 0,
+                            //key: 'ChangePassword', // here there will be no key as 
+                            actions: [
+                                NavigationActions.navigate({ routeName: 'SavedForm' }),
+                            
+                            ],
+                        })
+                  
+                        this.props.navigation.dispatch(resetAction);
+                        
+                        }}
+                        >
+                        <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start"}}>
+                            <Image source={require('../../assets/sidebar/2.png')} resizeMode="contain" style={styles.imageStyle} />
+                            <Text style={styles.headingStyle}> Saved QF Forms </Text>
+                        </View>
+                       
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={() => {
+                        this.props.navigation.navigate('ApprovedForm')
+                        const resetAction = StackActions.reset({
+                            index: 0,
+                            //key: 'ChangePassword', // here there will be no key as 
+                            actions: [
+                                NavigationActions.navigate({ routeName: 'ApprovedForm' }),
+                            
+                            ],
+                        })
+                  
+                        this.props.navigation.dispatch(resetAction);
+                        
+                        }}>
+                        <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start"}}>
+                            <Image source={require('../../assets/sidebar/3.png')} resizeMode="contain" style={styles.imageStyle} />
+                            <Text style={styles.headingStyle}> Approved QF Forms </Text>
+                        </View>
+                       
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={() => {
+                        this.props.navigation.toggleDrawer()
+                       
+                        }}>
+                        <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start"}}>
+                            <Image source={require('../../assets/sidebar/4.png')} resizeMode="contain" style={styles.imageStyle} />
+                            <Text style={styles.headingStyle}> Corrective Action Log </Text>
+                        </View>
+                       
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={() => {
+                        this.props.navigation.toggleDrawer()
+                       
+                        }}>
+                        <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start"}}>
+                            <Image source={require('../../assets/sidebar/4.png')} resizeMode="contain" style={styles.imageStyle} />
+                            <Text style={styles.headingStyle}> Hold/Release Log </Text>
+                        </View>
+                       
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={() => {
+                        this.props.navigation.toggleDrawer()
+                       
+                        }}>
+                        <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start"}}>
+                            <Image source={require('../../assets/sidebar/5.png')} resizeMode="contain" style={styles.imageStyle} />
+                            <Text style={styles.headingStyle}> Reports </Text>
+                        </View>
+                       
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={() => {
+                        this.props.navigation.navigate('ChangePasswordScreen')
+                        const resetAction = StackActions.reset({
+                            index: 0,
+                            //key: 'ChangePassword', // here there will be no key as 
+                            actions: [
+                                NavigationActions.navigate({ routeName: 'ChangePassword' }),
+                            
+                            ],
+                        })
+                  
+                        this.props.navigation.dispatch(resetAction);
+                        
+                        }}>
+                        <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start"}}>
+                            <Image source={require('../../assets/sidebar/6.png')} resizeMode="contain" style={styles.imageStyle} />
+                            <Text style={styles.headingStyle}> Change Password </Text>
+                        </View>
+                       
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={() => {
+                        this.showLogoutAlert()
+                       
+                        }}>
+                        <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start"}}>
+                            <Image source={require('../../assets/sidebar/7.png')} resizeMode="contain" style={styles.imageStyle} />
+                            <Text style={styles.headingStyle}> Logout </Text>
+                        </View>
+                       
+                    </TouchableOpacity>
+                    {/* <TouchableOpacity 
                      onPress={() => {
                         this.props.navigation.navigate('ChangePasswordScreen')
                         const resetAction = StackActions.reset({
@@ -134,79 +243,9 @@ export default class  SideBar extends Component  {
                         }}
                         >
                         <Text style={styles.headingStyle}> Change Password </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                     onPress={()=>{
-                         // Currently we have only homeStack which contains two screens so 
-                         // navigating to SavedItemScreen Stack first 
-                         // now to restart the component provide the index of the SavedItemStack
-                         //without the key
-                         this.props.navigation.navigate('SavedItemScreen')
-                            const resetAction = StackActions.reset({
-                                index: 0,
-                                //key: 'SavedItem', // here there will be no key as 
-                                actions: [
-                                    NavigationActions.navigate({ routeName: 'SavedItem' }),
-                                
-                                ],
-                            })
-                      
-                            this.props.navigation.dispatch(resetAction);}}
-                      >
-                        <Text style={styles.headingStyle}> Saved Items </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity  onPress={() => {
-                        
-                        this.props.navigation.navigate('PrivacyPolicyScreen')
-                        const resetAction = StackActions.reset({
-                            index: 0,
-                            //key: 'PrivacyPolicy', // here there will be no key as 
-                            actions: [
-                                NavigationActions.navigate({ routeName: 'PrivacyPolicy' }),
-                            
-                            ],
-                        })
-                  
-                        this.props.navigation.dispatch(resetAction);
-                        }}>
-                        <Text style={styles.headingStyle}> Privacy Policy </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                    onPress={()=>{
-                        this.props.navigation.navigate('ContactUsScreen')
-                        const resetAction = StackActions.reset({
-                            index: 0,
-                            //key: 'Contact', // here there will be no key as 
-                            actions: [
-                                NavigationActions.navigate({ routeName: 'Contact' }),
-                            
-                            ],
-                        })
-                  
-                        this.props.navigation.dispatch(resetAction);
-                        
-                        
-                        }}>
-
-                        <Text style={styles.headingStyle}> Contact Us </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={()=>this.showLogoutAlert()}>
-                        <Text style={styles.headingStyle}> Logout </Text>
-                    </TouchableOpacity>
-
-                </View>
-                {
-                     this.state.isLoading  &&
-                     <View
-                       style={[
-                         StyleSheet.absoluteFill,
-                         { backgroundColor: 'rgba(0, 0, 0, 0.7)', justifyContent: 'center' }
-                       ]}
-                     >
-                       <ActivityIndicator size="large" />
-                     </View>
-                } */}
+                    </TouchableOpacity> */}
+                    
+                
                </View>
             </View>
            
@@ -223,25 +262,17 @@ const styles =  StyleSheet.create({
 
     container:{
        
-        backgroundColor:Colors.yellow_theme,
+        backgroundColor:Colors.blue_btn,
         height:"100%"
 
     },
-
-    imageStyles:{
-
-        width:150,
-        height:150,
-        overflow:"hidden",
-        borderRadius:widthD/2,
-        borderWidth:1,
-        marginTop:20,
-        marginRight:40,
-        marginLeft:40,
+    ermslogo:{
+       
         alignSelf:"center",
-        borderColor:'black'
-
+        backgroundColor:"white"
     },
+
+    
     crossButton:{
         width:20,
         height:20,
@@ -273,11 +304,22 @@ const styles =  StyleSheet.create({
     },
     headingStyle:{
         fontSize:15,
-        marginLeft:20,
+        marginLeft:10,
         fontWeight:"700",
+        marginTop:20,
+        alignSelf:"center",
+        textAlign:"left",
+        color:"white"
+    },
+    imageStyle:{
+        width:30,
+        height:30,
+        marginLeft:20,
         marginTop:20,
         alignSelf:"flex-start",
         color:"white"
+
+
     },
 
 

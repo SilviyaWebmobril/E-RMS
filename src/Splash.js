@@ -27,22 +27,22 @@ export default class Splash extends Component {
     
     getMyValue = async() =>{
     
-        // try {
-        //    // this.props.navigation.navigate("SignUpStack");
-        //     const value = await AsyncStorage.getItem('token');
+        try {
+           // this.props.navigation.navigate("SignUpStack");
+            const value = await AsyncStorage.getItem('id');
            
-        //     if(value !== null) {
+            if(value !== null) {
                
-        //       this.props.navigation.navigate("HomeDrawer");
-        //     }else{
-        //         console.log("hi signup")
-        //         this.props.navigation.navigate("SignUpStack");
-        //     }
-        // } catch(e) {
+              this.props.navigation.navigate("HomeDrawer");
+            }else{
+                console.log("hi signup")
+                this.props.navigation.navigate("SignUpStack");
+            }
+        } catch(e) {
        
-        // }
+        }
 
-        this.props.navigation.navigate("SignUpStack");
+   //     this.props.navigation.navigate("SignUpStack");
     }
 
     render(){

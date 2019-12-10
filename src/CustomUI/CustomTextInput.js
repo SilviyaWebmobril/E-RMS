@@ -55,7 +55,14 @@ export class CustomTextInput extends Component {
                     validationRules:{
                         isText:true
                     }
-                }
+                },
+                mobile:{
+                    value: "",
+                    valid:false,
+                    validationRules:{
+                        isMobile:10,
+                    }
+                },
             }
         }
     }
@@ -114,7 +121,18 @@ export class CustomTextInput extends Component {
                     this.setState({errorState:true});
                 }
 
+            }else if(type == 'mobile'){
+
+
+                if(!this.state.controls.mobile.valid){
+                    this.setState({errorState:false});
+                   
+                }else{
+                    this.setState({errorState:true});
+                }
+
             }
+
 
         });
 
@@ -182,7 +200,17 @@ export class CustomTextInput extends Component {
                 }
                
     
+            }else if(type == "mobile"){
+
+                if(this.state.controls.mobile.valid){
+                    return this.state.controls.mobile.value;
+                }else{
+                    return "invalid";
+                }
+               
+    
             }
+
         
 
         

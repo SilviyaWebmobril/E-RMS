@@ -8,7 +8,7 @@ export default class CategoryItem extends Component {
     render(){
         return(
             <View style={styles.blueBoxes}>
-                <Text style={styles.textStyle}>{this.props.data.value}</Text>
+                <Text style={styles.textStyle}>{this.props.data.name}</Text>
                 
             </View>
         )

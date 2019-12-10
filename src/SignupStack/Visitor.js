@@ -1,10 +1,15 @@
 import React , { Component} from 'react';
-import {View ,Text, ScrollView, Image, StyleSheet,Dimensions} from 'react-native';
+import {View ,Text, ScrollView, Image, StyleSheet,Dimensions,ActivityIndicator} from 'react-native';
 import {CustomTextInput} from '../CustomUI/CustomTextInput';
 import CustomButton from '../CustomUI/CustomButton';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Colors from '../Utility/Colors'
-
+import DatePicker from 'react-native-datepicker'
+import {CheckBox} from 'react-native-elements';
+import Axios from 'axios';
+import ApiUrl from '../Utility/ApiUrl';
+import CustomAlert from '../CustomUI/CustomAlert';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
@@ -19,12 +24,162 @@ export  default class Vistor extends Component {
     constructor(props){
         super(props);
         this.state ={
-            isSec :true
+            isSec :true,
+            date: new Date(),
+            checked:false,
+            loadingvisible:false,
+            visible:false,
+            errorDesp:"",
+            errorHeading:""
         }
     }
 
+    formatDate =(date)=>{
+
+        var newmonth;
+        var new_date =  new Date(date);
+        var day = new_date.getDate();
+        var month = new_date.getMonth();
+        var year = new_date.getFullYear();
+        if(month <10){
+            newmonth = "0"+month;
+        }else{
+            newmonth = month;
+        }
+        return year+"-"+newmonth+"-"+day;
+
+    }
+
+    submitHandler = () =>{
+
+        if(this.refs.name.getInputTextValue('name') == "invalid"){
+
+            this.setState({visible:true});
+            this.setState({errorDesp:'Please enter name.'});
+            this.setState({errorHeading:'Visitor'});
+
+            return;
+
+        }
+
+
+        if(this.refs.company.getInputTextValue('name') == "invalid"){
+
+            this.setState({visible:true});
+            this.setState({errorDesp:'Please enter company name.'});
+            this.setState({errorHeading:'Visitor'});
+
+            return;
+
+        }
+
+        if(this.refs.email.getInputTextValue('email') == "invalid" ){
+
+            this.setState({visible:true});
+            this.setState({errorDesp:'Please enter valid email.'});
+            this.setState({errorHeading:'Visitor'});
+
+            return;
+
+        }
+
+      
+        if( this.refs.mobile.getInputTextValue('mobile') == "invalid"){
+
+            this.setState({visible:true});
+            this.setState({errorDesp:'Please enter valid mobile.'});
+            this.setState({errorHeading:'Visitor'});
+
+            return;
+        }
+
+        if(this.state.checked){
+
+            if(this.refs.email.getInputTextValue('email') !== "invalid" 
+            || this.refs.name.getInputTextValue('name') !== "invalid"
+            || this.refs.company.getInputTextValue('name') !== "invalid"
+            || this.refs.mobile.getInputTextValue('mobile') !== "invalid"){
+   
+               this.setState({loadingvisible:true});
+   
+               let formdata = new FormData();
+               formdata.append("name",this.refs.name.getInputTextValue('name'));
+               formdata.append("company",this.refs.company.getInputTextValue('name'));
+               formdata.append("date",this.formatDate(this.state.date));
+               formdata.append("email",this.refs.email.getInputTextValue('email'));
+               formdata.append("phone",this.refs.mobile.getInputTextValue('mobile'));
+   
+   
+               Axios.post(ApiUrl.base_url+ApiUrl.visitor_request, formdata).then(response => {
+   
+                   console.log("response ", response);
+                   this.setState({loadingvisible:false});
+   
+   
+                   if(response.data.status){
+   
+                        this.setState({visible:true});
+                        this.setState({errorDesp:'Something went wrong please try again later!'});
+                        this.setState({errorHeading:'Visitor'});
+   
+                   }else{
+   
+                    
+                       this.setState({visible:true});
+                       this.setState({errorDesp:`${response.data.message}`});
+                       this.setState({errorHeading:'Error'});
+                       this.props.navigation.goBack();
+                   }
+   
+   
+               }).catch(error => {
+                   this.setState({loadingvisible:false});
+                   this.setState({visible:true});
+                   this.setState({errorDesp:"Check your network connection"});
+                   this.setState({errorHeading:'Network Connection'});
+                  
+   
+   
+               })
+   
+   
+   
+   
+   
+   
+   
+   
+           }else{
+   
+                this.setState({visible:true});
+                this.setState({errorDesp:'All fields are mandatory!'});
+                this.setState({errorHeading:'Visitor'});
+              
+           }
+
+        }else{
+
+          
+            this.setState({visible:true});
+            this.setState({errorDesp:'Please accept Gmp And Allgerian Policies.'});
+            this.setState({errorHeading:'Visitor'});
+          
+
+        }
+
+       
+
+    }
+
+
+
+
+
+
     render(){
         return(
+            <View style={{flex:1}}>
+
             <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.container}>
                     <Image source={require('../../assets/logo_small.png')} resizeMode="contain" style={styles.ermslogo} />
@@ -33,50 +188,126 @@ export  default class Vistor extends Component {
 
                         <CustomTextInput 
                         ref="name"   
-                        image_style={{width:30,height:30,marginTop:10,marginRight:5}} 
+                       
+                        field_text={{marginBottom:10}}
                         placeholder="Enter Name"
                         text="Name"
                         inputType="name"
-                        error_text="Please Enter Valid Email"
-                        />
+                        error_text="Please enter valid name"
+                        />  
                         <CustomTextInput 
                         ref="company"
                         placeholder="Enter Company"
                         text="Company"
+                        field_text={{marginBottom:10}}
                         inputType="name"
-                        error_text="Please Enter Company Name"
+                        error_text="Please enter company name"
                         />
 
-                        <CustomTextInput 
+                        {/* <CustomTextInput 
                         ref="name"   
                         placeholder="Enter Date"
                         text="Date"
                         inputType="name"
                         error_text="Please Enter Valid Date"
+                        /> */}
+
+                        <DatePicker
+                            style={{width: "90%",marginLeft:20,marginRight:20}}
+                            date={this.state.date}
+                            mode="date"
+                            placeholder="select date"
+                            format="YYYY-MM-DD"
+                            minDate={this.state.date}
+                            //maxDate="2016-06-01"
+                            confirmBtnText="Confirm"
+                            cancelBtnText="Cancel"
+                            customStyles={{
+                            dateIcon: {
+                                position: 'absolute',
+                                left: 0,
+                               
+                                marginLeft: 0,
+                                marginTop:40,
+                                marginBottom:40,
+                            },
+                            dateInput: {
+                                marginLeft: 36,
+                                marginTop:20,
+                                marginBottom:20,
+                            }
+                            // ... You can check the source to find the other keys.
+                            }}
+                            onDateChange={(date) => {this.setState({date: date})}}
                         />
                         <CustomTextInput 
                         ref="email"
+                        field_text={{marginBottom:10}}
                         placeholder="Enter Email"
                         text="E-Mail Address"
-                        error_text="Please Enter Valid Email"
+                        error_text="Please enter valid email"
                         inputType="email"
                         
                         />
 
                         <CustomTextInput 
-                        ref="phone"   
-                        image_style={{width:30,height:30,marginTop:10,marginRight:5}} 
+                        ref="mobile"   
+                        field_text={{marginBottom:10}}
                         placeholder="Enter Phone"
                         text="Telephone"
-                        inputType="name"
-                        error_text="Please Enter Valid Phone"
+                       
+                        inputType="mobile"
+                        error_text="Please enter valid phone"
                         />
-                        
+
+                        <View style={{flexDirection:"row", flex:1,}}>
+                            <CheckBox
+                                checked={this.state.checked}
+                                onPress={()=>{this.setState({checked:!this.state.checked})}}
+                                containerStyle={{backgroundColor:'transparent',borderColor:"transparent",margin:0,flex:0.2}} 
+                                />
+                                <View style={{flexDirection:"row",marginTop:12}}>
+                                    <Text style={{fontSize:15, color:"grey",fontWeight:"bold",}}> I have read the </Text>
+                                    <TouchableOpacity 
+                                    //onPress={()=>{this.props.navigation.navigate("GmpPolicies")}}
+                                    >
+                                        <Text style={{color:Colors.blue_btn,fontSize:15, fontWeight:"bold",}}> GMP and Allgerian Policies </Text>
+                                    </TouchableOpacity>
+                                </View>
+                               
+                        </View>
+                         
+
                     
-                        <CustomButton text="Sign In" onPressHandler={()=>{ this.submitEmail()}} btn_style={{height:40}} view_button={{backgroundColor:Colors.blue_btn,borderColor:Colors.blue_btn}}/>
+                        <CustomButton text="Sign In" onPressHandler={()=>{this.submitHandler()}} btn_style={{height:40}} view_button={{backgroundColor:Colors.blue_btn,borderColor:Colors.blue_btn,}}/>
 
                 </View>
             </KeyboardAwareScrollView>
+            {this.state.loadingvisible && (
+                   <View
+                    style={[
+                    StyleSheet.absoluteFill,
+                    { backgroundColor: 'rgba(0, 0, 0, 0.7)', justifyContent: 'center' }
+                    ]}
+                    >
+                        <ActivityIndicator size="large" />
+                    </View>
+                )}
+
+                {this.state.visible 
+                ?
+                    <CustomAlert isVisible={this.state.visible} 
+                        errorHeading={this.state.errorHeading}
+                        errorDescription={this.state.errorDesp}
+                        cancelVisible={false} 
+                        onOKPress={()=>{this.setState({visible:false})}} />
+                    :
+                    <View/>
+                }
+
+
+            </View>
+           
         )
     }
 }
@@ -86,6 +317,7 @@ const styles = StyleSheet.create({
     container:{
         flex:1,
         backgroundColor:"white",
+        marginBottom:40
 
 
     },
