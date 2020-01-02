@@ -30,7 +30,8 @@ export  default class Vistor extends Component {
             loadingvisible:false,
             visible:false,
             errorDesp:"",
-            errorHeading:""
+            errorHeading:"",
+            currentDate:new Date(),
         }
     }
 
@@ -52,7 +53,7 @@ export  default class Vistor extends Component {
 
     submitHandler = () =>{
 
-        if(this.refs.name.getInputTextValue('name') == "invalid"){
+        if(this.refs.name.getInputTextValue('name') == "blank"){
 
             this.setState({visible:true});
             this.setState({errorDesp:'Please enter name.'});
@@ -62,6 +63,25 @@ export  default class Vistor extends Component {
 
         }
 
+        if(this.refs.name.getInputTextValue('name') == "invalid"){
+
+            this.setState({visible:true});
+            this.setState({errorDesp:'Please enter valid name.'});
+            this.setState({errorHeading:'Visitor'});
+
+            return;
+
+        }
+
+        if(this.refs.company.getInputTextValue('name') == "blank"){
+
+            this.setState({visible:true});
+            this.setState({errorDesp:'Please enter company name.'});
+            this.setState({errorHeading:'Visitor'});
+
+            return;
+
+        }
 
         if(this.refs.company.getInputTextValue('name') == "invalid"){
 
@@ -72,6 +92,18 @@ export  default class Vistor extends Component {
             return;
 
         }
+
+
+        if(this.refs.email.getInputTextValue('email') == "blank" ){
+
+            this.setState({visible:true});
+            this.setState({errorDesp:'Please enter email.'});
+            this.setState({errorHeading:'Visitor'});
+
+            return;
+
+        }
+
 
         if(this.refs.email.getInputTextValue('email') == "invalid" ){
 
@@ -218,7 +250,7 @@ export  default class Vistor extends Component {
                             mode="date"
                             placeholder="select date"
                             format="YYYY-MM-DD"
-                            minDate={this.state.date}
+                            minDate={this.state.currentDate}
                             //maxDate="2016-06-01"
                             confirmBtnText="Confirm"
                             cancelBtnText="Cancel"
@@ -238,7 +270,7 @@ export  default class Vistor extends Component {
                             }
                             // ... You can check the source to find the other keys.
                             }}
-                            onDateChange={(date) => {this.setState({date: date})}}
+                            onDateChange={(date) => {this.setState({date: this.formatDate(date)})}}
                         />
                         <CustomTextInput 
                         ref="email"

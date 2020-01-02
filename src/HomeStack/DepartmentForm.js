@@ -10,8 +10,9 @@ export default class DepartmentForm extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => {
         const { params = {} } = navigation.state;
+        console.log("my navigation in DEPARTMENT FORM",navigation.state);
           return{
-            header: () => <CustomHeaderDepartment name={navigation.getParam("name")} nav={navigation}/>,
+            header: () => <CustomHeaderDepartment name={navigation.getParam("name")} nav={navigation} />,
           }
       
       };
@@ -24,16 +25,19 @@ export default class DepartmentForm extends Component {
     async componentDidMount (){
 
         const value = await AsyncStorage.getItem('id');
-        console.log("my value", value);
-
-
-        this.setState({user_id:value})
+         this.setState({user_id:value})
 
     }
 
     hideSpinner() {
         console.log("id===>",this.props.navigation.getParam('department_id'));
         this.setState({ loading: false });
+      }
+
+      onMessage(data) {
+        //Prints out data that was passed.
+        console.log(data);
+        alert("hi i am coming from web.")
       }
 
 
@@ -48,9 +52,12 @@ export default class DepartmentForm extends Component {
                      onLoad={() => this.hideSpinner()}
                     // style={{width:'auto',height:'auto'}}
                      //originWhitelist={['*']}
+
                      javaScriptEnabled={true}
                         domStorageEnabled={true}
-                    source={{ uri: ApiUrl.base_url+ApiUrl.view_form+`${this.props.navigation.getParam('department_id')}&user_id=${this.state.user_id}`}} />
+                    source={{ uri: ApiUrl.base_url+ApiUrl.view_form+`${this.props.navigation.getParam('department_id')}&user_id=${this.state.user_id}`}} 
+                    onMessage={m => this.onMessage(m)} 
+                   />
 
 
                 </View>

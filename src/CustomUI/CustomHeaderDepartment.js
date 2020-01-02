@@ -8,11 +8,23 @@ export default class CustomHeaderDepartment extends Component {
 
 
     render(){
-        console.log("NAME",this.props.nav)
+       
         return(
+            
+
             <View style={styles.blueBoxes}>
                 <View style={styles.headerStyle}>
-                    <TouchableOpacity onPress={()=>{this.props.nav.goBack()}}>
+                    <TouchableOpacity onPress={()=>{
+                        console.log("my navigation props",this.props.nav.state.params === undefined);
+                        if(this.props.nav.state.params === undefined ){
+                            this.props.nav.navigate('HomeScreen');
+                        }else if(this.props.nav.state.params.onGoBack == undefined ){
+                            this.props.nav.goBack()
+                            return;
+                        }else{
+                            this.props.nav.state.params.onGoBack();this.props.nav.goBack()
+                        }
+                       }}>
                         <Image  source= {require('../../assets/back.png')} style={styles.menyuStyle} />
                     </TouchableOpacity>
                     
@@ -36,7 +48,6 @@ const styles  = StyleSheet.create({
         height:100,
         paddingLeft:20,
         paddingRight:20,
-        alignItems:"center",
         backgroundColor:Colors.blue_btn,
         elevation:10
     },
@@ -49,10 +60,10 @@ const styles  = StyleSheet.create({
         alignItems:"flex-start",
         alignSelf:"flex-start",
         flexDirection:'row',
-        marginTop:30,
-
-    
-
+        marginTop:50,
+        justifyContent:"center",
+        alignContent:"center",
+        alignItems:"center"
     },
     menyuStyle:{
         width:30,
@@ -65,7 +76,9 @@ const styles  = StyleSheet.create({
         fontSize:20,
         color:"white",
         marginTop:5,
-        marginLeft:30
+        marginLeft:15,
+        alignSelf:"center",
+        textAlign:"center",
     },
     searchStyle:{
         width:"100%",

@@ -33,6 +33,24 @@ export  default class Vistor extends Component {
 
     forgotPassword = () =>{
 
+        if(this.refs.email.getInputTextValue('email') == 'blank'){
+
+            this.setState({visible:true});
+            this.setState({errorDesp:"Please enter email"});
+            this.setState({errorHeading:'Forget Password'});
+
+            return;
+        }
+
+        if(this.refs.email.getInputTextValue('email') == 'invalid'){
+
+            this.setState({visible:true});
+            this.setState({errorDesp:"Please enter valid email"});
+            this.setState({errorHeading:'Forget Password'});
+
+            return;
+        }
+
         let  formdata = new FormData();
         this.setState({loading:true});
         formdata.append("email",this.refs.email.getInputTextValue('email'))

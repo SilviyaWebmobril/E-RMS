@@ -4,7 +4,7 @@ import { withNavigation } from 'react-navigation';
 import Colors from '../Utility/Colors';
 import { StackActions, NavigationActions} from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import CustomAlert from '../CustomUI/CustomAlert';
 
 const widthD = Dimensions.get("window").width;
 const heightH = Dimensions.get("window").height;
@@ -18,6 +18,9 @@ export default class  SideBar extends Component  {
             email:"",
             profile:"",
             isLoading:false,
+            visible:false,
+            errorDesp:"",
+            errorHeading:""
         }
     }
 
@@ -25,7 +28,7 @@ export default class  SideBar extends Component  {
        
       setInterval(()=>{
 
-        console.log("in every two seconds");
+       
         this.getUserEmailAndProfile();
         this.getUserName();
       },2000)
@@ -40,7 +43,7 @@ export default class  SideBar extends Component  {
 
             const profile = await AsyncStorage.getItem("profile");
             this.setState({profile:profile},()=>{
-                console.log("profile",profile);
+            
             })
             
            
@@ -52,7 +55,7 @@ export default class  SideBar extends Component  {
         try {
             const name = await AsyncStorage.getItem('name');
             this.setState({name:name},()=>{
-                console.log("my name123",this.state.name);
+              
             });
             
           
@@ -62,17 +65,22 @@ export default class  SideBar extends Component  {
      }
   
      showLogoutAlert = () =>{
-        Alert.alert(
-            'Logout',
-            "Are you sure that you want to logout ?",
-            [
+        // Alert.alert(
+        //     'Logout',
+        //     "Are you sure that you want to logout ?",
+        //     [
          
            
-            {text: 'CANCEL', onPress: () =>  {console.log("ok")}},
-            {text: 'OK', onPress: () =>  {this.removeData()}},
-            ], 
-            { cancelable: false }
-            )
+        //     {text: 'CANCEL', onPress: () =>  {console.log("ok")}},
+        //     {text: 'OK', onPress: () =>  {this.removeData()}},
+        //     ], 
+        //     { cancelable: false }
+        //     )
+
+        this.setState({visible:true});
+        this.setState({errorHeading:"Logout"});
+        this.setState({errorDesp:"Are you sure that you want to logout ?"});
+
         
      }
   
@@ -99,7 +107,7 @@ export default class  SideBar extends Component  {
 
             <View style={styles.container}>
                 <View>
-                    <View style={{height:120,backgroundColor:"white",justifyContent:"center"}}>
+                    <View style={{height:130,backgroundColor:"white",justifyContent:"center",paddingTop:20}}>
                         <Image source={require('../../assets/logo_small.png')} resizeMode="contain" style={styles.ermslogo} />
                     </View>
                     
@@ -163,7 +171,17 @@ export default class  SideBar extends Component  {
                     </TouchableOpacity>
                     <TouchableOpacity
                     onPress={() => {
-                        this.props.navigation.toggleDrawer()
+                        this.props.navigation.navigate('CorrectiveForm')
+                        const resetAction = StackActions.reset({
+                            index: 0,
+                            //key: 'ChangePassword', // here there will be no key as 
+                            actions: [
+                                NavigationActions.navigate({ routeName: 'CorrectiveForm' }),
+                            
+                            ],
+                        })
+                  
+                        this.props.navigation.dispatch(resetAction);
                        
                         }}>
                         <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start"}}>
@@ -174,7 +192,18 @@ export default class  SideBar extends Component  {
                     </TouchableOpacity>
                     <TouchableOpacity
                     onPress={() => {
-                        this.props.navigation.toggleDrawer()
+                        this.props.navigation.navigate('HoldRelease')
+                        const resetAction = StackActions.reset({
+                            index: 0,
+                            //key: 'ChangePassword', // here there will be no key as 
+                            actions: [
+                                NavigationActions.navigate({ routeName: 'HoldRelease' }),
+                            
+                            ],
+                        })
+                  
+                        this.props.navigation.dispatch(resetAction);
+                       
                        
                         }}>
                         <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start"}}>
@@ -185,7 +214,18 @@ export default class  SideBar extends Component  {
                     </TouchableOpacity>
                     <TouchableOpacity
                     onPress={() => {
-                        this.props.navigation.toggleDrawer()
+                        this.props.navigation.navigate('Report')
+                        const resetAction = StackActions.reset({
+                            index: 0,
+                            //key: 'ChangePassword', // here there will be no key as 
+                            actions: [
+                                NavigationActions.navigate({ routeName: 'Report' }),
+                            
+                            ],
+                        })
+                  
+                        this.props.navigation.dispatch(resetAction);
+                       
                        
                         }}>
                         <View style={{flexDirection:"row",justifyContent:"flex-start",alignItems:"flex-start"}}>
@@ -247,6 +287,17 @@ export default class  SideBar extends Component  {
                     
                 
                </View>
+               {this.state.visible 
+                ?
+                    <CustomAlert isVisible={this.state.visible} 
+                        errorHeading={this.state.errorHeading}
+                        errorDescription={this.state.errorDesp}
+                        cancelVisible={true} 
+                        onCancelPress={()=>{this.setState({visible:false})}}
+                        onOKPress={()=>{this.setState({visible:false});this.removeData()}} />
+                    :
+                    <View/>
+                }
             </View>
            
 

@@ -6,18 +6,25 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Card } from 'react-native-elements';
 import Colors from '../Utility/Colors';
+import {withNavigation} from 'react-navigation';
 
 
-export default class SavedForm extends Component {
+class SavedForm extends Component {
 
+    constructor(props){
+        super(props);
+
+    }
     state={
         saved_form:[],
         loading:false,
         message:""
     }
 
+    
 
-    async componentDidMount(){
+      fetch =async() =>{
+
 
         this.setState({loading:true});
         let user_id = await AsyncStorage.getItem('id');
@@ -26,15 +33,20 @@ export default class SavedForm extends Component {
         formdata.append("user_id",JSON.parse(user_id));
         formdata.append("role_id",JSON.parse(role_id));
         Axios.post(ApiUrl.base_url+ApiUrl.saved_form,formdata).then(response =>{
+          
             this.setState({loading:false});
-            if(!response.data.status){
+            if(!response.data.error){
 
                 this.setState({saved_form:response.data.data});
 
 
             }else{
+               
+                this.setState({saved_form:[]});
+                this.setState({message:response.data.message},()=>{
 
-                this.setState({message:response.data.message});
+                    console.log("my message",this.state.message);
+                });
             }
 
 
@@ -43,13 +55,25 @@ export default class SavedForm extends Component {
 
 
         })
+      }
+
+  
+
+    async componentDidMount(){
+
+        this.fetch();
+    }
+
+    onRefresh = () =>{
+        console.log("hello");
+        this.fetch();
     }
 
     renderItem(data){
         let { item, index } = data;
        
         return(
-            <TouchableOpacity  onPress={()=>{ this.props.navigation.navigate('DepartmentForm',{department_id : item.form.id,name :item.form.name})}}>
+            <TouchableOpacity  onPress={()=>{ this.props.navigation.navigate('DepartmentForm',{department_id : item.form.id,name :item.form.name, onGoBack:this.onRefresh,})}}>
               <Card containerStyle={{width: Dimensions.get('window').width-20}}>
                   <View style={{flexDirection:"row",justifyContent:"space-between",alignContent:"center",alignItems:"center"}}>
                     <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
@@ -77,14 +101,15 @@ export default class SavedForm extends Component {
              <View style={{flex:1}}>
                 <KeyboardAwareScrollView>
                     <View style={{flex:1}}>
+                  
                     
                     <FlatList
-                        numColumns={2}
+                       
                         data={this.state.saved_form}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={(item) =>this.renderItem(item)}
                         style={{paddingBottom:10}}
-                        columnWrapperStyle={{flexGrow: 1, justifyContent: 'space-around',marginTop:15}}
+                        //columnWrapperStyle={{flexGrow: 1, justifyContent: 'space-around',marginTop:15}}
                         />
                     
 
@@ -112,4 +137,7 @@ export default class SavedForm extends Component {
            
         )
     }
+
+   
 }
+export default  withNavigation(SavedForm);

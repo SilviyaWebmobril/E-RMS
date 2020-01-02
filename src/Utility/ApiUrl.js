@@ -18,7 +18,19 @@ export default {
 
     saved_form :"saved_forms",
 
+    submitted_form: "locked_forms",
+
+    approved_form :"approved_forms",
+
+    rejected_form :"rejected_forms",
+
     change_password :"change_password",
+
+    corrective_form:"corrective_forms",
+
+    hold_release:"hold_release_forms",
+
+    reports :"reports",
 
     
 

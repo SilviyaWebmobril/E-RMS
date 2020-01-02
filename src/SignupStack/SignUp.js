@@ -33,13 +33,21 @@ export default class SignUp extends Component{
 
     signInHandler = () =>{
 
-        if(this.refs.email.getInputTextValue('email') == "invalid"){
+        // if(this.refs.email.getInputTextValue('email') == "invalid"){
+
+        //     this.setState({visible:true});
+        //     this.setState({errorDesp:'Please enter valid email'});
+        //     this.setState({errorHeading:'SignUp'});
+        //     return;
+
+        // }
+
+        if(this.refs.password.getInputTextValue('password') == "blank"){
 
             this.setState({visible:true});
-            this.setState({errorDesp:'Please enter valid email'});
+            this.setState({errorDesp:'Please enter password'});
             this.setState({errorHeading:'SignUp'});
             return;
-
         }
 
         if(this.refs.password.getInputTextValue('password') == "invalid"){
@@ -50,12 +58,14 @@ export default class SignUp extends Component{
             return;
         }
 
-        if(this.refs.email.getInputTextValue('email') !== "invalid" || this.refs.password.getInputTextValue('password') !== "invalid"){
+        if(this.refs.password.getInputTextValue('password') !== "invalid"){
             this.setState({loading:true})
             let formdata  = new FormData();
-            formdata.append("email",this.refs.email.getInputTextValue('email'));
+            formdata.append("username",this.refs.email.getInputTextValue('name'));
             formdata.append("password",this.refs.password.getInputTextValue('password'));
             Axios.post(ApiUrl.base_url+ ApiUrl.login,formdata).then(response => {
+
+              console.log("response....",response.data.result);
 
                 this.setState({loading:false})
 
@@ -66,8 +76,8 @@ export default class SignUp extends Component{
                     this.setState({errorHeading:'SignUp'});
                 }else{
 
-                    AsyncStorage.setItem('id',JSON.stringify(response.data.result.id));
-                    AsyncStorage.setItem('roles_id',JSON.stringify(response.data.result.roles_id));
+                    AsyncStorage.setItem('id',response.data.result.id.toString());
+                    AsyncStorage.setItem('roles_id',response.data.result.roles_id.toString());
                    // AsyncStorage.setItem('email',esponse.data.result.email)
 
                     this.props.navigation.navigate('HomeDrawer')
@@ -115,14 +125,15 @@ export default class SignUp extends Component{
 
                         <CustomTextInput 
                             ref="email"   
-                            field_text={{marginBottom:10}}
-                            placeholder="Enter Email"
-                            text="EMAIL"
-                            inputType="email"
-                            error_text="Please enter valid email."
+                            field_text={{marginBottom:5}}
+                            placeholder="Enter Username"
+                            text="USERNAME"
+                            inputType="name"
+                            error_text="Please enter valid username."
                             />
                             <CustomTextInput 
                             ref="password"
+                           
                             placeholder="Enter Password"
                             text="PASSWORD"
                             inputType="password"
@@ -194,9 +205,9 @@ const styles = StyleSheet.create({
     },
     box:{
        // flex:1,
-        height:height-100,
+        height:height*0.7,
         width:width * 0.9, 
-        marginTop:60,
+        marginTop:height*0.12,
         marginBottom:40,
         alignItems:"center",
         justifyContent:"center",
@@ -205,6 +216,7 @@ const styles = StyleSheet.create({
         shadowColor:"black",
         elevation:10,
         shadowRadius:3,
-        shadowOpacity:3
+        shadowOpacity:3,
+        alignSelf:'center'
    }
 })

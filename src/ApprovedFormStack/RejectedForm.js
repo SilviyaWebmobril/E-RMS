@@ -25,9 +25,9 @@ export default class RejectedForm extends Component {
         let formdata  = new FormData();
         formdata.append("user_id",JSON.parse(user_id));
         formdata.append("role_id",JSON.parse(role_id));
-        Axios.post(ApiUrl.base_url+ApiUrl.saved_form,formdata).then(response =>{
+        Axios.post(ApiUrl.base_url+ApiUrl.rejected_form,formdata).then(response =>{
             this.setState({loading:false});
-            if(!response.data.status){
+            if(!response.data.error){
 
                 this.setState({saved_form:response.data.data});
 
@@ -45,11 +45,15 @@ export default class RejectedForm extends Component {
         })
     }
 
+    onRefresh = () =>{
+        
+    }
+
     renderItem(data){
         let { item, index } = data;
        
         return(
-            <TouchableOpacity  onPress={()=>{ this.props.navigation.navigate('DepartmentForm',{department_id : item.form.id,name :item.form.name})}}>
+            <TouchableOpacity  onPress={()=>{ this.props.navigation.navigate('DepartmentForm',{department_id : item.form.id,name :item.form.name,onGoBack: () => this.onRefresh(),})}}>
               <Card containerStyle={{width: Dimensions.get('window').width-20}}>
                   <View style={{flexDirection:"row",justifyContent:"space-between",alignContent:"center",alignItems:"center"}}>
                     <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>

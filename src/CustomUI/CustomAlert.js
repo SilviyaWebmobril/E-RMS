@@ -4,7 +4,7 @@ import Modal from "react-native-modal";
 import Colors from '../Utility/Colors';
 
 const width = Dimensions.get('window').width;
-const height  = Dimensions.get('window').height;
+const windowheight  = Dimensions.get('window').height;
 
 export default class CustomAlert extends Component {
 
@@ -18,7 +18,8 @@ export default class CustomAlert extends Component {
                 <Modal isVisible={this.props.isVisible}>
                
                 <View style={styles.modalContainer}>
-                <Image source={require('../../assets/app-icon.png')} style={{width:width/4,height:height/8,alignSelf:"center",marginTop:(height/6 - 150)}}/>
+                <Image source={require('../../assets/app-icon.png')} style={styles.imageStyle}
+                 />
                      <Text style={styles.modalHeading}>{this.props.errorHeading}</Text>
                      <Text style={styles.modalDescription}>{this.props.errorDescription}</Text>
                     <View style={styles.buttonView}>
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
     modalContainer:{
 
         width:"90%",
-        height:"28%",
+        height:160,
         alignSelf:"center",
         backgroundColor:"white",
         elevation:10,
@@ -82,7 +83,8 @@ const styles = StyleSheet.create({
     buttonView:{
         flexDirection:"row",
         justifyContent:"flex-end",
-        margin:20
+        marginTop:20,
+        marginBottom:30
     },
     cancelButton:{
         color:"grey",
@@ -97,6 +99,12 @@ const styles = StyleSheet.create({
         marginRight:20,
         marginLeft:10,
         fontWeight:"bold",
+    },
+    imageStyle:{
+        width:width/5,
+        height:windowheight/10,
+        alignSelf:"center", 
+        marginTop: windowheight ==  896 ? (windowheight/8 - 150) : (windowheight/8 - 120)
     }
 
 

@@ -13,13 +13,13 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export default class ChangePassword  extends Component {
 
-    static navigationOptions = ({ navigation, screenProps }) => {
-        const { params = {} } = navigation.state;
-          return{
-            header: () => <CustomHeaderDepartment name="Change Password" nav={navigation} />
-          }
+    // static navigationOptions = ({ navigation, screenProps }) => {
+    //     const { params = {} } = navigation.state;
+    //       return{
+    //         header: () => <CustomHeaderDepartment name="Change Password" nav={navigation} />
+    //       }
       
-      };
+    //   };
 
 
 
@@ -33,20 +33,48 @@ export default class ChangePassword  extends Component {
 
     submitHandler = async() =>{
 
+        if(this.refs.old_password.getInputTextValue('password') == "blank"){
+
+            this.setState({visible:true});
+            this.setState({errorDesp:'Please enter old password.'});
+            this.setState({errorHeading:'SignUp'});
+            return;
+        }
+
+
         if(this.refs.old_password.getInputTextValue('password') == 'invalid'){
 
             this.setState({visible:true});
             this.setState({errorHeading:"Change Password"});
-            this.setState({errorDesp:"Old Password must be of minimum 6 characters"});
+            this.setState({errorDesp:"Old Password must be of minimum 6 characters."});
 
             return;
         }
+
+        if(this.refs.new_password.getInputTextValue('password') == 'blank'){
+
+            this.setState({visible:true});
+            this.setState({errorHeading:"Change Password"});
+            this.setState({errorDesp:"New password must not be blank."});
+
+            return;
+        }
+
 
         if(this.refs.new_password.getInputTextValue('password') == 'invalid'){
 
             this.setState({visible:true});
             this.setState({errorHeading:"Change Password"});
-            this.setState({errorDesp:"New Password must be of minimum 6 characters"});
+            this.setState({errorDesp:"New Password must be of minimum 6 characters."});
+
+            return;
+        }
+
+        if(this.refs.confirm_password.getInputTextValue('password') == 'blank'){
+
+            this.setState({visible:true});
+            this.setState({errorHeading:"Change Password"});
+            this.setState({errorDesp:"Confirm Password must not be blank."});
 
             return;
         }
@@ -55,7 +83,7 @@ export default class ChangePassword  extends Component {
 
             this.setState({visible:true});
             this.setState({errorHeading:"Change Password"});
-            this.setState({errorDesp:"Confirm Password must be of minimum 6 characters"});
+            this.setState({errorDesp:"Confirm Password must be of minimum 6 characters."});
 
             return;
         }

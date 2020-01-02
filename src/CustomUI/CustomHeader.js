@@ -5,7 +5,7 @@ import { CustomTextInput } from './CustomTextInput';
 import { SearchBar } from 'react-native-elements';
 import Axios from 'axios';
 import ApiUrl from '../Utility/ApiUrl';
-
+import AsyncStorage from '@react-native-community/async-storage';
 
 
 export default class CustomHeader extends Component {
@@ -13,7 +13,7 @@ export default class CustomHeader extends Component {
     constructor(props) {
         super(props);
         //setting default state
-        this.state = { isLoading: true, search: '',dataSource:[] };
+        this.state = { isLoading: false, search: '',dataSource:[] };
         this.arrayholder = [];
       }
      
@@ -23,7 +23,7 @@ export default class CustomHeader extends Component {
       clear = () => {
         this.search.clear();
       };
-      SearchFilterFunction(text) {
+      async SearchFilterFunction(text) {
         //passing the inserted text in textinput
         // const newData = this.arrayholder.filter(function(item) {
         //   //applying filter for the inserted text in search bar
@@ -34,16 +34,18 @@ export default class CustomHeader extends Component {
         this.setState({
              
           search:text,
+          isLoading:true,
         });
 
-
-        Axios.post(ApiUrl.base_url+ApiUrl.search+text).then(response=>{
+        let user_id = await AsyncStorage.getItem('id');
+        Axios.post(ApiUrl.base_url+ApiUrl.search+text+"&user_id="+user_id).then(response=>{
+          this.setState({isLoading:false})
 
           if(response.data.error){
 
             this.setState({
              
-              search:text,
+             // search:text,
             });
 
 
@@ -53,7 +55,9 @@ export default class CustomHeader extends Component {
               //setting the filtered newData on datasource
               //After setting the data it will automatically re-render the view
               dataSource: response.data.data,
-              search:text,
+              
+            },()=>{
+              console.log("datasource",this.state.dataSource);
             });
           }
 
@@ -99,23 +103,23 @@ export default class CustomHeader extends Component {
                     onClear={text => this.SearchFilterFunction('')}
                     placeholder="Type Here..."
                     lightTheme={true}
+                    showLoading={this.state.isLoading}
                     value={this.state.search}
                     />
                      {this.state.dataSource.length > 0 
                      ?
                      <FlatList
                       data={this.state.dataSource}
-                    // ItemSeparatorComponent={this.ListViewItemSeparator}
+                      
+                      ItemSeparatorComponent={this.ListViewItemSeparator}
                       //Item Separator View
                       renderItem={({ item }) => {
                           // Single Comes here which will be repeatative for the FlatListItems
-                        
-                          <Text style={styles.textStyle}>{item.title}</Text>
-                        
+                          <Text style={styles.textStyle}>sdgbfhdjgfjn</Text>
                       }}
-                      //contentContainerStyle={styles.searchStyle}
-                      enableEmptySections={true}
-                      style={{ marginTop: 0 ,position:"absolute",height:1000,top:50,left:0,right:0,bottom:0,backgroundColor:"white"}}
+                        contentContainerStyle={styles.searchStyle}
+                       enableEmptySections={true}
+                      style={{ marginTop: 0 ,position:"absolute",height:400,top:70,left:0,right:0,bottom:0,backgroundColor:"grey"}}
                       keyExtractor={(item, index) => index.toString()}
                       />
                      :
@@ -139,7 +143,7 @@ const styles  = StyleSheet.create({
 
     blueBoxes:{
         width:"100%",
-        height:150,
+        height:170,
         paddingLeft:20,
         paddingRight:20,
         alignItems:"center",
@@ -155,7 +159,9 @@ const styles  = StyleSheet.create({
         alignItems:"flex-start",
         alignSelf:"flex-start",
         flexDirection:'row',
-        marginTop:30
+        marginTop:50,
+        justifyContent:"center",
+        alignContent:"center"
     
 
     },
@@ -174,14 +180,14 @@ const styles  = StyleSheet.create({
     },
     searchStyle:{
         width:"100%",
-        height:45,
+         height:45,
         paddingLeft:20,
         paddingRight:20,
         alignItems:"flex-start",
         backgroundColor:"white",
         borderRadius:5,
         flexDirection:"row",
-        marginTop:20
+        marginTop:15
         
     },
     serachImage:{
@@ -199,6 +205,8 @@ const styles  = StyleSheet.create({
         marginTop: Platform.OS == 'ios'? 10 : 0
       },
       textStyle: {
-        padding: 10,
+        //padding: 10,
+        color:"red",
+        fontSize:40,
       },
 })

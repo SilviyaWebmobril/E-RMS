@@ -89,7 +89,11 @@ export class CustomTextInput extends Component {
 
             if(type == "name"){
 
-                if(!this.state.controls.name.valid){
+                if(this.state.controls.name.value == ""){
+
+                    this.setState({errorState:true})
+
+                }else if(!this.state.controls.name.valid){
                   
                     this.setState({errorState:false})
                    
@@ -98,14 +102,27 @@ export class CustomTextInput extends Component {
                 }
                 
             }else if(type == "email"){
-                if(!this.state.controls.email.valid){
-                    this.setState({errorState:false});
-                    
-                }else{
+
+                if(this.state.controls.email.value == ""){
+                   
                     this.setState({errorState:true});
                 }
+                else if(!this.state.controls.email.valid){
+
+                    this.setState({errorState:false});
+                    
+                }else {
+                    this.setState({errorState:true});
+                }
+
             }else if(type == 'password'){
-                if(!this.state.controls.password.valid){
+
+                if(this.state.controls.password.value  == ""){
+
+                    this.setState({errorState:true});
+
+                }else if(!this.state.controls.password.valid){
+
                     this.setState({errorState:false});
                    
                 }else{
@@ -113,8 +130,12 @@ export class CustomTextInput extends Component {
                 }
             }else if(type == 'confirm_password'){
 
+                if(this.state.controls.confirm_password.value == ""){
 
-                if(!this.state.controls.confirm_password.valid){
+                    this.setState({errorState:true});
+
+                }else if(!this.state.controls.confirm_password.valid){
+
                     this.setState({errorState:false});
                    
                 }else{
@@ -123,8 +144,12 @@ export class CustomTextInput extends Component {
 
             }else if(type == 'mobile'){
 
+                if(this.state.controls.mobile.value == ""){
 
-                if(!this.state.controls.mobile.valid){
+                    this.setState({errorState:true});
+
+                }else if(!this.state.controls.mobile.valid){
+
                     this.setState({errorState:false});
                    
                 }else{
@@ -149,7 +174,9 @@ export class CustomTextInput extends Component {
      
             if(type == "name"){
 
-                if( this.state.controls.name.valid){
+                if(this.state.controls.name == ""){
+                    return "blank";
+                }else if( this.state.controls.name.valid){
                     return this.state.controls.name.value;
                 }else{
                     return "invalid";
@@ -157,7 +184,9 @@ export class CustomTextInput extends Component {
             
             }else if(type == "email"){
 
-                if(this.state.controls.email.valid){
+                if(this.state.controls.email.value == ""){
+                    return "blank";
+                }else if(this.state.controls.email.valid){
                     return this.state.controls.email.value;
                 }else{
                     return "invalid";
@@ -166,16 +195,25 @@ export class CustomTextInput extends Component {
     
             }else if(type == "password"){
 
-                if(this.state.controls.password.valid){
+                if(this.state.controls.password.value == ""){
+                    
+                    return "blank";
+                }else if(this.state.controls.password.valid){
+
+
                     return this.state.controls.password.value;
                 }else{
                     return "invalid";
                 }
                
+               
     
             }else if(type == "confirm_password"){
 
-                if(this.state.controls.confirm_password.valid){
+                if(this.state.controls.confirm_password.value == ""){
+                    
+                    return "blank";
+                }else if(this.state.controls.confirm_password.valid){
                     return this.state.controls.confirm_password.value;
                 }else{
                     return "invalid";
@@ -202,7 +240,9 @@ export class CustomTextInput extends Component {
     
             }else if(type == "mobile"){
 
-                if(this.state.controls.mobile.valid){
+                if(this.state.controls.mobile.value == ""){
+                    return "blank";
+                }else if(this.state.controls.mobile.valid){
                     return this.state.controls.mobile.value;
                 }else{
                     return "invalid";
@@ -312,8 +352,7 @@ export class CustomTextInput extends Component {
 const styles = StyleSheet.create({
 
     container:{
-        marginTop:20,
-        flex:1,
+       
         margin:20
         
     },

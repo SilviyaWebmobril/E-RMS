@@ -7,6 +7,7 @@ import Axios from 'axios';
 import ApiUrl from '../Utility/ApiUrl';
 import AsyncStorage from '@react-native-community/async-storage';
 import CustomAlert from '../CustomUI/CustomAlert';
+import Colors from '../Utility/Colors';
 
 export default class Home extends Component {
 
@@ -32,6 +33,10 @@ export default class Home extends Component {
         }
     }
 
+    onRefresh =() =>{
+
+    }
+
 
     componentDidMount = async() => {
 
@@ -45,12 +50,14 @@ export default class Home extends Component {
         console.log("formdata",formdata);
         Axios.post(ApiUrl.base_url+ApiUrl.departments,formdata).then(response =>{
             this.setState({loading:false})
+
+            console.log("response -->",response);
            
             if(response.data.error){
 
                // alert("Something went wrong please try again later!")
                 this.setState({visible:true});
-                this.setState({errorDesp:'Something went wrong please try again later!'});
+                this.setState({errorDesp:response.data.message});
                 this.setState({errorHeading:'Error'});
             }else{
 
@@ -71,7 +78,7 @@ export default class Home extends Component {
             'id':item.id
         }
         //alert("passing"+item.value)
-        this.props.navigation.navigate('Department',{result:obj})
+        this.props.navigation.navigate('Department',{result:obj,onGoBack: () => this.onRefresh(),})
     }
 
     renderItem(data){
@@ -93,6 +100,8 @@ export default class Home extends Component {
                     <View style={styles.container}>
                         <Text style={styles.departmentStyle}>Select Department</Text>
 
+                        {this.state.department.length > 0
+                        ?
                         <FlatList
                         numColumns={2}
                         data={this.state.department}
@@ -101,6 +110,14 @@ export default class Home extends Component {
                         style={{paddingBottom:10}}
                         columnWrapperStyle={{flexGrow: 1, justifyContent: 'space-around',marginTop:15}}
                         />
+                        :
+                        <View style={{justifyContent:'center',flex:1}}>
+                            <Text style={{alignSelf:"center",fontSize:15,fontWeight:"bold",color:Colors.blue_btn}}>{this.state.errorDesp}</Text>
+                        </View>
+                        }
+
+
+                      
                     
 
 
