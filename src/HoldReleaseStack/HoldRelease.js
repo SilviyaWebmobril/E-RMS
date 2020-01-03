@@ -34,7 +34,7 @@ export default class CorrectiveAction extends Component {
             if(!response.data.error){
                 this.setState({correctiveLogs:response.data.data});
             }else{
-                this.setState({message:response.data.message})
+                this.setState({message:response.data.message,correctiveLogs:[]})
             }
 
 
@@ -58,6 +58,9 @@ export default class CorrectiveAction extends Component {
             <TouchableOpacity  onPress={()=>{ this.props.navigation.navigate('DepartmentForm',{department_id : item.form.id,name :item.form.name,onGoBack: () => this.onRefresh(),})}}>
               <Card containerStyle={{width: Dimensions.get('window').width-20}}>
                   <View style={{flexDirection:"row",justifyContent:"space-between",alignContent:"center",alignItems:"center"}}>
+                  <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
+                        {item.form.department.name}
+                    </Text>
                     <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
                         {item.form.name}
                     </Text>
@@ -83,14 +86,27 @@ export default class CorrectiveAction extends Component {
             <View style={{flex:1}}>
                 <KeyboardAwareScrollView>
                     <View style={{flex:1}}>
+
+                    {this.state.correctiveLogs.length > 0 
+                        ?
+                        <View style={{justifyContent:"space-between",flexDirection:"row",marginTop:10,marginLeft:5,marginRight:5}}>
+                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",alignSelf:"flex-start"}}>Department name</Text>
+                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",}}>Form Name</Text>
+                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",}}>Form Status</Text>
+
+                        </View>
+                        :
+                            <View/>
+                    }
+                      
                     
                     <FlatList
-                        numColumns={2}
+                        
                         data={this.state.correctiveLogs}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={(item) =>this.renderItem(item)}
                         style={{paddingBottom:10}}
-                        columnWrapperStyle={{flexGrow: 1, justifyContent: 'space-around',marginTop:15}}
+                        //columnWrapperStyle={{flexGrow: 1, justifyContent: 'space-around',marginTop:15}}
                         />
                     </View>
                 

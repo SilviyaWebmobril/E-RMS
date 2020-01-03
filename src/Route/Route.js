@@ -153,177 +153,201 @@ const reportStack =  createStackNavigator({
 
 
 
-const approvedFormBottomNavigator = createBottomTabNavigator(  
-    {  
-        'Approved':{
-            screen:ApprovedForm,
-            navigationOptions:{
-                header:null,
-                headerMode:"none",
-                tabBarLabel:'APPROVED FORMS',  
+// const approvedFormBottomNavigator = createBottomTabNavigator(  
+//     {  
+//         'Approved':{
+//             screen:ApprovedForm,
+//             navigationOptions:{
+//                 header:null,
+//                 headerMode:"none",
+//                 tabBarLabel:'APPROVED FORMS',  
                 
-                tabBarOnPress: ({ navigation, defaultHandler }) => {
+//                 tabBarOnPress: ({ navigation, defaultHandler }) => {
                 
-                    navigation.navigate('ApprovedForm')
-                    const resetAction = StackActions.reset({
-                      index: 0,
-                      //key: 'HomeScreen',
-                      actions: [NavigationActions.navigate({ routeName: 'ApprovedForm',
-                      params: {
-                        //iseditable: 1   // this second parameter is for sending the params
-                    }  })],
-                    })
-                    navigation.dispatch(resetAction);
-                  }
+//                     navigation.navigate('ApprovedForm')
+//                     const resetAction = StackActions.reset({
+//                       index: 0,
+//                       //key: 'HomeScreen',
+//                       actions: [NavigationActions.navigate({ routeName: 'ApprovedForm',
+//                       params: {
+//                         //iseditable: 1   // this second parameter is for sending the params
+//                     }  })],
+//                     })
+//                     navigation.dispatch(resetAction);
+//                   }
             
                 
-              }
-            },
+//               }
+//             },
         
 
-        'Rejected':{
-            screen:RejectedForm,
-            navigationOptions:{
-                header:null,
-                headerMode:"none",
-                tabBarLabel:'REJECTED FORMS',  
+//         'Rejected':{
+//             screen:RejectedForm,
+//             navigationOptions:{
+//                 header:null,
+//                 headerMode:"none",
+//                 tabBarLabel:'REJECTED FORMS',  
                 
-            }
+//             }
             
-        } ,  
+//         } ,  
         
-    },  
-    {
-        initialRouteName: 'Approved',
-        tabBarOptions: {
-            showIcon:false,
-            labelStyle:{
-                fontSize:12,
-                fontWeight:"bold",
-                textAlign:"center",
-                justifyContent:"center"
-            },
-           activeTintColor:Colors.blue_btn ,
-           style: {
-            marginBottom:10,
-            height: 40,
-            borderTopWidth: 1,
+//     },  
+//     {
+//         initialRouteName: 'Approved',
+//         tabBarOptions: {
+//             showIcon:false,
+//             labelStyle:{
+//                 fontSize:12,
+//                 fontWeight:"bold",
+//                 textAlign:"center",
+//                 justifyContent:"center"
+//             },
+//            activeTintColor:Colors.blue_btn ,
+//            style: {
+//             marginBottom:10,
+//             height: 40,
+//             borderTopWidth: 1,
             
-        },
+//         },
        
-    }}
-)  
+//     }}
+// )  
 
 
-const approvedFormStack = createStackNavigator({
+const approvedRejectedFormStack = createStackNavigator({
 
     ApprovedForm :{
-        screen:approvedFormBottomNavigator,
-        navigationOptions: ({ navigation }) => ({  //navigation is used for setting custiom title from prev
-            title: "Approved QF Forms",
-
-            headerLeft: (
-            <TouchableOpacity  onPress={() => {navigation.navigate('HomeScreen')}}>
-            <Image style={{width: 25, height: 25,margin:10,alignSelf:"center"}}  source={require('../../assets/back.png')} />
-            </TouchableOpacity>
-
-            ),
-          
-              headerStyle:{
-                justifyContent:"center",
-                alignItems:"center",
-                backgroundColor:Colors.blue_btn,
-              },
-               headerTitleStyle: { color: 'white' ,fontSize:16, fontWeight:"bold",},
-
-    }),
-  
+        screen:ApprovedForm,
        
     }
     ,
-    DepartmentForm,
+    DepartmentForm:{
+        screen:  DepartmentForm,
+    }
+  
 
 })
 
 
-const savedFormNavigator  = createBottomTabNavigator({
-
-    'Saved':{
-        screen:SavedForm,
-        navigationOptions:{
-            tabBarLabel:'SAVED FORMS',  
-            tabBarIcon:false,
-            tabBarOnPress: ({ navigation, defaultHandler }) => {
-            
-            navigation.navigate('SavedForm')
-            const resetAction = StackActions.reset({
-                index: 0,
-                //key: 'HomeScreen',
-                actions: [NavigationActions.navigate({ routeName: 'SavedForm',
-                params: {
-                //iseditable: 1   // this second parameter is for sending the params
-            }  })],
-            })
-            navigation.dispatch(resetAction);
-            }
-        }
-    },
-    'Submitted':{
-        screen:SubmittedForm,
-        navigationOptions:{
-            tabBarLabel:'SUBMITTED FORMS',  
-             
-        }
-        
-    }
-},{
-    initialRouteName: 'Saved',
-    tabBarOptions: {
-        showIcon:false,
-        labelStyle:{
-            fontSize:12,
-            fontWeight:"bold",
-            textAlign:"center",
-            justifyContent:"center"
-        },
-       activeTintColor:Colors.blue_btn ,
-       style: {
-        marginBottom:10,
-        height: 40,
-        borderTopWidth: 1,
-        
-    },
-   
-}});
-
-
-
-
-const savedStack = createStackNavigator({
+const savedSubmittedStack = createStackNavigator({
 
     SavedForm:{
-        screen:savedFormNavigator,
-        navigationOptions: ({ navigation }) => ({  //navigation is used for setting custiom title from prev
-            title: "Saved QF Forms",
+        screen:SavedForm,
+        // navigationOptions: ({ navigation }) => ({  //navigation is used for setting custiom title from prev
+        //     title: "Saved QF Forms",
     
-            headerLeft: (
-            <TouchableOpacity  onPress={() => {navigation.navigate('HomeScreen')}}>
-            <Image style={{width: 25, height: 25,margin:10,alignSelf:"center"}}  source={require('../../assets/back.png')} />
-            </TouchableOpacity>
+        //     headerLeft: (
+        //     <TouchableOpacity  onPress={() => {navigation.navigate('HomeScreen')}}>
+        //     <Image style={{width: 25, height: 25,margin:10,alignSelf:"center"}}  source={require('../../assets/back.png')} />
+        //     </TouchableOpacity>
     
-            ),
+        //     ),
           
-              headerStyle:{
+        //       headerStyle:{
                 
-                backgroundColor:Colors.blue_btn,
-              },
-               headerTitleStyle: { color: 'white' ,fontSize:16, fontWeight:"bold",},
+        //         backgroundColor:Colors.blue_btn,
+        //       },
+        //        headerTitleStyle: { color: 'white' ,fontSize:16, fontWeight:"bold",},
     
-        }),
+        // }),
     },
     DepartmentForm,
 
 })
+
+const submittedStack = createStackNavigator({
+
+    SubmittedForm:{
+        screen:SubmittedForm,
+        // navigationOptions: ({ navigation }) => ({  //navigation is used for setting custiom title from prev
+        //     title: "Saved QF Forms",
+    
+        //     headerLeft: (
+        //     <TouchableOpacity  onPress={() => {navigation.navigate('HomeScreen')}}>
+        //     <Image style={{width: 25, height: 25,margin:10,alignSelf:"center"}}  source={require('../../assets/back.png')} />
+        //     </TouchableOpacity>
+    
+        //     ),
+          
+        //       headerStyle:{
+                
+        //         backgroundColor:Colors.blue_btn,
+        //       },
+        //        headerTitleStyle: { color: 'white' ,fontSize:16, fontWeight:"bold",},
+    
+        // }),
+    },
+    DepartmentForm,
+
+})
+
+// const savedFormNavigator  = createBottomTabNavigator({
+
+//     'Saved':{
+//         screen:savedStack,
+//         navigationOptions:{
+//             tabBarLabel:'SAVED FORMS',  
+//             tabBarIcon:false,
+//             tabBarOnPress: ({ navigation, defaultHandler }) => {
+            
+//             navigation.navigate('SavedForm')
+//             const resetAction = StackActions.reset({
+//                 index: 0,
+//                 //key: 'HomeScreen',
+//                 actions: [NavigationActions.navigate({ routeName: 'SavedForm',
+//                 params: {
+//                 //iseditable: 1   // this second parameter is for sending the params
+//             }  })],
+//             })
+//             navigation.dispatch(resetAction);
+//             }
+//         }
+//     },
+//     'Submitted':{
+//         screen:submittedStack,
+//         navigationOptions:{
+//             tabBarLabel:'SUBMITTED FORMS',  
+//             tabBarIcon:false,
+//             tabBarOnPress: ({ navigation, defaultHandler }) => {
+            
+//             navigation.navigate('SubmittedForm')
+//             const resetAction = StackActions.reset({
+//                 index: 0,
+//                 //key: 'HomeScreen',
+//                 actions: [NavigationActions.navigate({ routeName: 'SubmittedForm',
+//                 params: {
+//                 //iseditable: 1   // this second parameter is for sending the params
+//             }  })],
+//             })
+//             navigation.dispatch(resetAction);
+//             }
+//         }
+       
+//     }
+// },{
+//     initialRouteName: 'Saved',
+//     tabBarOptions: {
+//         showIcon:false,
+//         labelStyle:{
+//             fontSize:12,
+//             fontWeight:"bold",
+//             textAlign:"center",
+//             justifyContent:"center"
+//         },
+//        activeTintColor:Colors.blue_btn ,
+//        style: {
+//         marginBottom:10,
+//         height: 40,
+//         borderTopWidth: 1,
+        
+//     },
+   
+// }});
+
+
+
+
 
 const drawerNavigator = createDrawerNavigator({
 
@@ -331,10 +355,10 @@ const drawerNavigator = createDrawerNavigator({
         screen:homeStack
     },
     SavedForm:{
-        screen:savedStack
+        screen:savedSubmittedStack
     },
     ApprovedForm:{
-        screen:approvedFormStack,
+        screen:approvedRejectedFormStack,
     },
     CorrectiveForm:{
         screen:correctiveFormSatck

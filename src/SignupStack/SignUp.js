@@ -146,8 +146,8 @@ export default class SignUp extends Component{
                             </TouchableOpacity>
                            
                         
-                            <CustomButton text=" Sign In " onPressHandler={()=>{this.signInHandler()}} view_button={{backgroundColor:Colors.blue_btn,borderColor:Colors.blue_btn}} btn_style={{height:40}}/>
-                            <CustomButton text=" Visitor/ Contractor Sign In " onPressHandler={()=>{ this.visitorHandler()}} view_button={{backgroundColor:Colors.black_btn,borderColor:Colors.black_btn,marginTop:0, height:40}} btn_style={{height:40}}/>
+                            <CustomButton text=" Sign In " onPressHandler={()=>{this.signInHandler()}} view_button={{backgroundColor:Colors.blue_btn,borderColor:Colors.blue_btn,}} />
+                            <CustomButton text=" Visitor/ Contractor Sign In " onPressHandler={()=>{ this.visitorHandler()}} view_button={{backgroundColor:Colors.black_btn,borderColor:Colors.black_btn,}} />
                
                
                      
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     },
     box:{
        // flex:1,
-        height:height*0.7,
+        height:height*0.75,
         width:width * 0.9, 
         marginTop:height*0.12,
         marginBottom:40,

@@ -7,9 +7,19 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Card } from 'react-native-elements';
 import Colors from '../Utility/Colors';
 import {withNavigation} from 'react-navigation';
+import  CustomHeaderDepartment  from '../CustomUI/CustomHeaderDepartment';
 
 
 class SavedForm extends Component {
+
+    static navigationOptions = ({ navigation, screenProps }) => {
+        const { params = {} } = navigation.state;
+        
+          return{
+            header: () => <CustomHeaderDepartment name="Saved QF Forms" nav={navigation}/>,
+          }
+      
+      };
 
     constructor(props){
         super(props);
@@ -71,20 +81,32 @@ class SavedForm extends Component {
 
     renderItem(data){
         let { item, index } = data;
+
        
         return(
             <TouchableOpacity  onPress={()=>{ this.props.navigation.navigate('DepartmentForm',{department_id : item.form.id,name :item.form.name, onGoBack:this.onRefresh,})}}>
               <Card containerStyle={{width: Dimensions.get('window').width-20}}>
                   <View style={{flexDirection:"row",justifyContent:"space-between",alignContent:"center",alignItems:"center"}}>
+                  <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
+                        {item.form.department.name}
+                    </Text>
                     <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
                         {item.form.name}
                     </Text>
+                    {item.form_status == 0 
+                    ?
                     <TouchableOpacity style={{backgroundColor:'#F7F7F7',marginRight:5,
                         borderRadius:20,padding:9,justifyContent:'center',alignItems:'center'}}
-                        onPress={() => {this.props.navigation.navigate('DepartmentForm',{department_id : item.form.id,name :item.form.name})}}>
+                        onPress={() => {this.props.navigation.navigate('DepartmentForm',{department_id : item.form.id,name :item.form.name,onGoBack:this.onRefresh,})}}>
                         <Image style={{width: 20, height: 20,}}
                         source={require('../../assets/edit.png')} />
                     </TouchableOpacity>
+                    :
+                    <Text style={{justifyContent:"flex-end",alignSelf:"flex-end",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
+                       Submitted
+                    </Text>
+                    }
+                    
                   </View>
                 </Card>
             </TouchableOpacity>
@@ -101,6 +123,19 @@ class SavedForm extends Component {
              <View style={{flex:1}}>
                 <KeyboardAwareScrollView>
                     <View style={{flex:1}}>
+
+                    {this.state.saved_form.length > 0 
+                        ?
+                        <View style={{justifyContent:"space-between",flexDirection:"row",marginTop:10,marginLeft:5,marginRight:5}}>
+                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",alignSelf:"flex-start"}}>Department name</Text>
+                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",}}>Form Name</Text>
+                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",}}>Form Status</Text>
+
+                        </View>
+                        :
+                            <View/>
+                        }
+                      
                   
                     
                     <FlatList

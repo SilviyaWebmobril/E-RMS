@@ -241,14 +241,14 @@ export default class Department extends Component {
             <View style={{flex:1}}>
                 <KeyboardAwareScrollView>
                     <View style={{flex:1}}>
-                    <View style={styles.btnView}>
+                    {/* <View style={styles.btnView}>
                         <TouchableOpacity style={styles.correctiveBtn} onPress={()=>this.onPressCorrectiveAction()} >
                             <Text style={styles.textStyle}>Corrective Action Form</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.holdBtn}  onPress={()=>this.onHoldHandler()}  >
                             <Text style={styles.textStyle}>Hold</Text>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
 
                    
                         <FlatList

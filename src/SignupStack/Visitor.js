@@ -32,21 +32,25 @@ export  default class Vistor extends Component {
             errorDesp:"",
             errorHeading:"",
             currentDate:new Date(),
+            errorStatus:false
         }
     }
 
     formatDate =(date)=>{
 
         var newmonth;
+        console.log("month",date);
         var new_date =  new Date(date);
-        var day = new_date.getDate();
-        var month = new_date.getMonth();
-        var year = new_date.getFullYear();
+        var day = date.getDate();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+       
         if(month <10){
             newmonth = "0"+month;
         }else{
             newmonth = month;
         }
+        console.log("date",year+"-"+newmonth+"-"+day);
         return year+"-"+newmonth+"-"+day;
 
     }
@@ -119,7 +123,7 @@ export  default class Vistor extends Component {
         if( this.refs.mobile.getInputTextValue('mobile') == "invalid"){
 
             this.setState({visible:true});
-            this.setState({errorDesp:'Please enter valid mobile.'});
+            this.setState({errorDesp:'Please enter valid mobile number.'});
             this.setState({errorHeading:'Visitor'});
 
             return;
@@ -137,9 +141,10 @@ export  default class Vistor extends Component {
                let formdata = new FormData();
                formdata.append("name",this.refs.name.getInputTextValue('name'));
                formdata.append("company",this.refs.company.getInputTextValue('name'));
-               formdata.append("date",this.formatDate(this.state.date));
+               formdata.append("date",this.state.date);
                formdata.append("email",this.refs.email.getInputTextValue('email'));
                formdata.append("phone",this.refs.mobile.getInputTextValue('mobile'));
+               console.log("formdata",formdata);
    
    
                Axios.post(ApiUrl.base_url+ApiUrl.visitor_request, formdata).then(response => {
@@ -151,6 +156,7 @@ export  default class Vistor extends Component {
                    if(response.data.status){
    
                         this.setState({visible:true});
+                        this.setState({errorStatus:true})
                         this.setState({errorDesp:'Something went wrong please try again later!'});
                         this.setState({errorHeading:'Visitor'});
    
@@ -158,13 +164,15 @@ export  default class Vistor extends Component {
    
                     
                        this.setState({visible:true});
+                       this.setState({errorStatus:false})
                        this.setState({errorDesp:`${response.data.message}`});
-                       this.setState({errorHeading:'Error'});
-                       this.props.navigation.goBack();
+                       this.setState({errorHeading:'Visitor Sign In'});
+                       
                    }
    
    
                }).catch(error => {
+                this.setState({errorStatus:false})
                    this.setState({loadingvisible:false});
                    this.setState({visible:true});
                    this.setState({errorDesp:"Check your network connection"});
@@ -270,7 +278,7 @@ export  default class Vistor extends Component {
                             }
                             // ... You can check the source to find the other keys.
                             }}
-                            onDateChange={(date) => {this.setState({date: this.formatDate(date)})}}
+                            onDateChange={(date) => {this.setState({date: date})}}
                         />
                         <CustomTextInput 
                         ref="email"
@@ -298,12 +306,12 @@ export  default class Vistor extends Component {
                                 onPress={()=>{this.setState({checked:!this.state.checked})}}
                                 containerStyle={{backgroundColor:'transparent',borderColor:"transparent",margin:0,flex:0.2}} 
                                 />
-                                <View style={{flexDirection:"row",marginTop:12}}>
-                                    <Text style={{fontSize:15, color:"grey",fontWeight:"bold",}}> I have read the </Text>
+                                <View style={{flexDirection:"row",marginTop:12,}}>
+                                    <Text style={{fontSize:13, color:"grey",fontWeight:"bold",}}> I have read the </Text>
                                     <TouchableOpacity 
                                     //onPress={()=>{this.props.navigation.navigate("GmpPolicies")}}
                                     >
-                                        <Text style={{color:Colors.blue_btn,fontSize:15, fontWeight:"bold",}}> GMP and Allgerian Policies </Text>
+                                        <Text numberOfLines={2} style={{color:Colors.blue_btn,fontSize:13, fontWeight:"bold",}}>{` GMP and Allgerian Policies`} </Text>
                                     </TouchableOpacity>
                                 </View>
                                
@@ -311,7 +319,7 @@ export  default class Vistor extends Component {
                          
 
                     
-                        <CustomButton text="Sign In" onPressHandler={()=>{this.submitHandler()}} btn_style={{height:40}} view_button={{backgroundColor:Colors.blue_btn,borderColor:Colors.blue_btn,}}/>
+                        <CustomButton text="Submit" onPressHandler={()=>{this.submitHandler()}} btn_style={{height:40}} view_button={{backgroundColor:Colors.blue_btn,borderColor:Colors.blue_btn,}}/>
 
                 </View>
             </KeyboardAwareScrollView>
@@ -332,7 +340,13 @@ export  default class Vistor extends Component {
                         errorHeading={this.state.errorHeading}
                         errorDescription={this.state.errorDesp}
                         cancelVisible={false} 
-                        onOKPress={()=>{this.setState({visible:false})}} />
+                        onOKPress={()=>{
+                            this.setState({visible:false});
+                            if(this.state.errorStatus){
+                                return;
+                            }
+                            this.props.navigation.goBack();
+                        }} />
                     :
                     <View/>
                 }

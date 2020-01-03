@@ -1,5 +1,5 @@
 import React ,{Component} from 'react';
-import {View ,Text,StyleSheet,ScrollView,FlatList,TouchableOpacity,ActivityIndicator} from 'react-native';
+import {View ,Text,StyleSheet,ScrollView,FlatList,TouchableOpacity,ActivityIndicator,RefreshControl} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import CategoryItem from './CategoryItem';
 import CustomHeader from '../CustomUI/CustomHeader';
@@ -29,12 +29,14 @@ export default class Home extends Component {
             department:[],
             visible:false,
             errorDesp:"",
-            errorHeading:""
+            errorHeading:"",
+            
         }
     }
 
     onRefresh =() =>{
 
+        this.componentDidMount();
     }
 
 
@@ -64,7 +66,7 @@ export default class Home extends Component {
                 this.setState({department:response.data.data});
             }
         }).catch(error=>{
-            
+            this.setState({loading:false})
             this.setState({visible:true});
             this.setState({errorDesp:'Something went wrong please try again later!'});
             this.setState({errorHeading:'Error'});
@@ -96,7 +98,8 @@ export default class Home extends Component {
         return(
             <View style={{flex:1}}>
 
-                <KeyboardAwareScrollView>
+                <KeyboardAwareScrollView  refreshControl={
+                <RefreshControl refreshing={this.state.loading} onRefresh={this.onRefresh}/>  } >
                     <View style={styles.container}>
                         <Text style={styles.departmentStyle}>Select Department</Text>
 

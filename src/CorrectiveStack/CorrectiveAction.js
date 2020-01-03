@@ -1,5 +1,5 @@
 import React ,{ Component} from 'react';
-import { View ,StyleSheet, Text ,Dimensions, ScrollView , FlatList ,Image,TouchableOpacity} from 'react-native';
+import { View ,StyleSheet, Text ,Dimensions, ScrollView , FlatList ,Image,TouchableOpacity,ActivityIndicator} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Axios from 'axios';
 import CustomHeaderDepartment from '../CustomUI/CustomHeaderDepartment';
@@ -29,7 +29,8 @@ export default class CorrectiveAction extends Component {
         super(props);
         this.state={
             correctiveLogs:[],
-            message:""
+            message:"",
+            loading:false
         }
     }
 
@@ -37,12 +38,13 @@ export default class CorrectiveAction extends Component {
 
         let user_id = await AsyncStorage.getItem('id');
         let role_id = await AsyncStorage.getItem('roles_id');
+        this.setState({loading:true})
 
         let formdata = new FormData();
         formdata.append("user_id",user_id);
         formdata.append("role_id",role_id)
         Axios.post(ApiUrl.base_url+ ApiUrl.corrective_form,formdata).then(response => {
-
+            this.setState({loading:false})
            
             if(!response.data.error){
                 console.log("response data",response.data.message);
@@ -58,6 +60,7 @@ export default class CorrectiveAction extends Component {
 
         }).catch(error => {
 
+            this.setState({loading:false})
 
         })
 
@@ -65,7 +68,7 @@ export default class CorrectiveAction extends Component {
 
     onRefresh(){
         console.log("hellooooooo");
-       // this.componentDidMount()
+        this.componentDidMount()
     }
 
     renderItem(data){
@@ -75,15 +78,21 @@ export default class CorrectiveAction extends Component {
             <TouchableOpacity  onPress={()=>{ this.props.navigation.navigate('DepartmentForm',{department_id : item.form.id,name :item.form.name,onGoBack:this.onRefresh.bind(this),})}}>
               <Card containerStyle={{width: Dimensions.get('window').width-20}}>
                   <View style={{flexDirection:"row",justifyContent:"space-between",alignContent:"center",alignItems:"center"}}>
+                  <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
+                        {item.form.department.name}
+                    </Text>
                     <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
                         {item.form.name}
                     </Text>
-                    <TouchableOpacity style={{backgroundColor:'#F7F7F7',marginRight:5,
+                    {/* <TouchableOpacity style={{backgroundColor:'#F7F7F7',marginRight:5,
                         borderRadius:20,padding:9,justifyContent:'center',alignItems:'center'}}
-                        onPress={() => {this.props.navigation.navigate('DepartmentForm',{department_id : item.form.id,name :item.form.name})}}>
+                        onPress={() => {this.props.navigation.navigate('DepartmentForm',{department_id : item.form.id,name :item.form.name,onGoBack:this.onRefresh.bind(this),})}}>
                         <Image style={{width: 20, height: 20,}}
                         source={require('../../assets/edit.png')} />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
+                    <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
+                        Allow Re-Edit
+                    </Text>
                   </View>
                 </Card>
             </TouchableOpacity>
@@ -97,14 +106,27 @@ export default class CorrectiveAction extends Component {
             <View style={{flex:1}}>
                 <KeyboardAwareScrollView>
                     <View style={{flex:1}}>
+
+                        {this.state.correctiveLogs.length > 0 
+                        ?
+                        <View style={{justifyContent:"space-between",flexDirection:"row",marginTop:10,marginLeft:5,marginRight:5}}>
+                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",alignSelf:"flex-start"}}>Department name</Text>
+                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",}}>Form Name</Text>
+                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",}}>Form Status</Text>
+
+                        </View>
+                        :
+                            <View/>
+                        }
+                      
                     
                     <FlatList
-                        numColumns={2}
+                        //numColumns={2}
                         data={this.state.correctiveLogs}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={(item) =>this.renderItem(item)}
                         style={{paddingBottom:10}}
-                        columnWrapperStyle={{flexGrow: 1, justifyContent: 'space-around',marginTop:15}}
+                        //columnWrapperStyle={{flexGrow: 1, justifyContent: 'space-around',marginTop:15}}
                         />
                     
 

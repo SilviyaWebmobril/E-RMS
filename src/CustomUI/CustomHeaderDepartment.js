@@ -15,13 +15,19 @@ export default class CustomHeaderDepartment extends Component {
             <View style={styles.blueBoxes}>
                 <View style={styles.headerStyle}>
                     <TouchableOpacity onPress={()=>{
-                        console.log("my navigation props",this.props.nav.state.params === undefined);
-                        if(this.props.nav.state.params === undefined ){
+                        console.log("my navigation props",this.props.nav);
+                        if(this.props.nav.state === undefined){
+                            this.props.nav.navigate('HomeScreen');
+                            
+                        }else if(this.props.nav.state.params === undefined ){
+                            console.log("2")
                             this.props.nav.navigate('HomeScreen');
                         }else if(this.props.nav.state.params.onGoBack == undefined ){
+                            console.log("3")
                             this.props.nav.goBack()
                             return;
                         }else{
+                            console.log("4")
                             this.props.nav.state.params.onGoBack();this.props.nav.goBack()
                         }
                        }}>

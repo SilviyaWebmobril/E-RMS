@@ -10,7 +10,7 @@ export default class DepartmentForm extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => {
         const { params = {} } = navigation.state;
-        console.log("my navigation in DEPARTMENT FORM",navigation.state);
+       
           return{
             header: () => <CustomHeaderDepartment name={navigation.getParam("name")} nav={navigation} />,
           }
@@ -34,15 +34,7 @@ export default class DepartmentForm extends Component {
         this.setState({ loading: false });
       }
 
-      onMessage(data) {
-        //Prints out data that was passed.
-        console.log(data);
-        alert("hi i am coming from web.")
-      }
-
-
-
-
+     
 
     render(){
         return(

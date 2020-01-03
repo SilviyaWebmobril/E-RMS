@@ -56,7 +56,7 @@ const textValidator = (val) => {
 
 const mobilevalidator =  (val) => {
 
-  return val.length == 10;
+  return val.length >= 7 && val.length <=15 ;
 }
 
 const passwordValidator = (val,minLength) => {

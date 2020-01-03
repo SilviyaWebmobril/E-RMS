@@ -1,11 +1,12 @@
 import React ,{Component} from 'react';
-import {View ,Text,StyleSheet,Image,TextInput,TouchableOpacity,FlatList} from 'react-native';
+import {View ,Text,StyleSheet,Image,TextInput,TouchableOpacity,FlatList, Alert} from 'react-native';
 import Colors from '../Utility/Colors';
 import { CustomTextInput } from './CustomTextInput';
 import { SearchBar } from 'react-native-elements';
 import Axios from 'axios';
 import ApiUrl from '../Utility/ApiUrl';
 import AsyncStorage from '@react-native-community/async-storage';
+import CustomAlert from '../CustomUI/CustomAlert';
 
 
 export default class CustomHeader extends Component {
@@ -13,7 +14,7 @@ export default class CustomHeader extends Component {
     constructor(props) {
         super(props);
         //setting default state
-        this.state = { isLoading: false, search: '',dataSource:[] };
+        this.state = { isLoading: false, search: '',dataSource:[],visible:false };
         this.arrayholder = [];
       }
      
@@ -44,9 +45,16 @@ export default class CustomHeader extends Component {
           if(response.data.error){
 
             this.setState({
-             
+             dataSource:[]
              // search:text,
             });
+
+            if(text === ""){
+              return;
+            }
+            this.setState({visible:true});
+            this.setState({errorDesp:'Search not found!'});
+            this.setState({errorHeading:'Error'});
 
 
           }else{
@@ -55,9 +63,10 @@ export default class CustomHeader extends Component {
               //setting the filtered newData on datasource
               //After setting the data it will automatically re-render the view
               dataSource: response.data.data,
+              visible:false,
+              errorDesp:"",
+              errorHeading:""
               
-            },()=>{
-              console.log("datasource",this.state.dataSource);
             });
           }
 
@@ -76,13 +85,28 @@ export default class CustomHeader extends Component {
         return (
           <View
             style={{
-              height: 0.3,
-              width: '90%',
-              backgroundColor: '#080808',
+              height: 1,
+              flex:1,
+              width: '100%',
+              backgroundColor: 'grey',
             }}
           />
         );
       };
+
+      next(item){
+        let obj ={
+            'name':item.name,
+            'id':item.id
+        }
+        //alert("passing"+item.value)
+        this.props.nav.navigate('Department',{result:obj,onGoBack: () => this.onRefresh(),})
+    }
+
+    onRefresh= () =>{
+
+    }
+
 
     render(){
         const { search } = this.state;
@@ -95,13 +119,15 @@ export default class CustomHeader extends Component {
                     
                     <Text style={styles.headerText}>Dashboard</Text>
                 </View>
-                {/* <View style={styles.viewStyle}>
+                <View style={styles.viewStyle}>
                     <SearchBar
                     round
+                    containerStyle={{backgroundColor:"white",borderRadius:10,height:50}}
+                    inputContainerStyle={{backgroundColor:"white",height:30}}
                     searchIcon={{ size: 24 }}
                     onChangeText={text => this.SearchFilterFunction(text)}
-                    onClear={text => this.SearchFilterFunction('')}
-                    placeholder="Type Here..."
+                    onClear={text => {this.SearchFilterFunction('')}}
+                    placeholder="Search Here..."
                     lightTheme={true}
                     showLoading={this.state.isLoading}
                     value={this.state.search}
@@ -110,28 +136,42 @@ export default class CustomHeader extends Component {
                      ?
                      <FlatList
                       data={this.state.dataSource}
-                      
+                      horizontal={false}
                       ItemSeparatorComponent={this.ListViewItemSeparator}
                       //Item Separator View
                       renderItem={({ item }) => {
                           // Single Comes here which will be repeatative for the FlatListItems
-                          <Text style={styles.textStyle}>sdgbfhdjgfjn</Text>
+                         return (
+                          <TouchableOpacity onPress={()=>{this.next(item)}} style={{padding:10,backgroundColor:"#ececec"}}>
+                            <Text style={styles.textStyle}>{item.name}</Text>
+                          </TouchableOpacity>
+                         ) 
                       }}
-                        contentContainerStyle={styles.searchStyle}
+                       // contentContainerStyle={styles.searchStyle}
                        enableEmptySections={true}
-                      style={{ marginTop: 0 ,position:"absolute",height:400,top:70,left:0,right:0,bottom:0,backgroundColor:"grey"}}
+                      style={{ marginTop:0,position:"absolute",height:"auto",zIndex:100,top:70,width:"100%",backgroundColor:"white",borderColor:"grey",borderWidth:1}}
                       keyExtractor={(item, index) => index.toString()}
                       />
                      :
                      <View/>
                     }
                     
-                </View> */}
-                <View style={styles.searchStyle}> 
+                </View> 
+                {/* <View style={styles.searchStyle}> 
                   <Image source={require('../../assets/search.png')} style={styles.serachImage} />
                   <TextInput placeholder="Search Here" style={{marginTop:15}}/>
 
-                </View>
+                </View> */}
+                  {this.state.visible 
+                ?
+                    <CustomAlert isVisible={this.state.visible} 
+                        errorHeading={this.state.errorHeading}
+                        errorDescription={this.state.errorDesp}
+                        cancelVisible={false} 
+                        onOKPress={()=>{this.setState({visible:false})}} />
+                    :
+                    <View/>
+                }
 
             </View>
         )
@@ -149,11 +189,6 @@ const styles  = StyleSheet.create({
         alignItems:"center",
         backgroundColor:Colors.blue_btn,
         elevation:10
-    },
-    textStyle :{
-        fontWeight:"normal",
-        fontSize:15,
-        color:"white"
     },
     headerStyle:{
         alignItems:"flex-start",
@@ -179,12 +214,13 @@ const styles  = StyleSheet.create({
         marginLeft:20
     },
     searchStyle:{
+        flexDirection:"column",
         width:"100%",
          height:45,
         paddingLeft:20,
         paddingRight:20,
         alignItems:"flex-start",
-        backgroundColor:"white",
+        backgroundColor:"blue",
         borderRadius:5,
         flexDirection:"row",
         marginTop:15
@@ -206,7 +242,9 @@ const styles  = StyleSheet.create({
       },
       textStyle: {
         //padding: 10,
-        color:"red",
-        fontSize:40,
+        
+        width:"100%",
+        color:"black",
+        fontSize:15,
       },
 })

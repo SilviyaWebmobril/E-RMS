@@ -56,6 +56,9 @@ export default class RejectedForm extends Component {
             <TouchableOpacity  onPress={()=>{ this.props.navigation.navigate('DepartmentForm',{department_id : item.form.id,name :item.form.name,onGoBack: () => this.onRefresh(),})}}>
               <Card containerStyle={{width: Dimensions.get('window').width-20}}>
                   <View style={{flexDirection:"row",justifyContent:"space-between",alignContent:"center",alignItems:"center"}}>
+                  <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
+                        {item.form.department.name}
+                    </Text>
                     <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
                         {item.form.name}
                     </Text>
@@ -83,12 +86,12 @@ export default class RejectedForm extends Component {
                     <View style={{flex:1}}>
                     
                     <FlatList
-                        numColumns={2}
+                       // numColumns={2}
                         data={this.state.saved_form}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={(item) =>this.renderItem(item)}
                         style={{paddingBottom:10}}
-                        columnWrapperStyle={{flexGrow: 1, justifyContent: 'space-around',marginTop:15}}
+                        //columnWrapperStyle={{flexGrow: 1, justifyContent: 'space-around',marginTop:15}}
                         />
                     
 
