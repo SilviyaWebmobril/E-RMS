@@ -35,7 +35,7 @@ export default class ApprovedForm extends Component {
         let formdata  = new FormData();
         formdata.append("user_id",JSON.parse(user_id));
         formdata.append("role_id",JSON.parse(role_id));
-        Axios.post(ApiUrl.base_url+ApiUrl.approved_form,formdata).then(response =>{
+        Axios.post(ApiUrl.base_url+ApiUrl.rejected_form,formdata).then(response =>{
             this.setState({loading:false});
             if(!response.data.error){
 
@@ -66,7 +66,7 @@ export default class ApprovedForm extends Component {
        
         return(
             <TouchableOpacity  onPress={()=>{ this.props.navigation.navigate('DepartmentForm',{department_id : item.form.id,name :item.form.name,onGoBack: () => this.onRefresh(),})}}>
-              <Card containerStyle={{width: Dimensions.get('window').width-20}}>
+              <Card containerStyle={{width: Dimensions.get('window').width-30,justifyContent:"center",flex:1}}>
                   <View style={{flexDirection:"row",justifyContent:"space-between",alignContent:"center",alignItems:"center"}}>
                   <Text style={{justifyContent:"center",alignSelf:"flex-start",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
                         {item.form.department.name}
@@ -74,7 +74,7 @@ export default class ApprovedForm extends Component {
                     <Text style={{alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
                         {item.form.name}
                     </Text>
-                    {item.form.form_status == 2
+                    {item.form_status == 2
                     ?
                     <Text style={{alignSelf:"center",color:Colors.black,fontSize:15}}>
                         Approved
@@ -110,10 +110,11 @@ export default class ApprovedForm extends Component {
 
                     {this.state.saved_form.length > 0 
                         ?
-                        <View style={{justifyContent:"space-between",flexDirection:"row",marginTop:10,marginLeft:5,marginRight:5}}>
-                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",alignSelf:"flex-start"}}>Department name</Text>
-                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",}}>Form Name</Text>
-                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",}}>Form Status</Text>
+                        <View style={{justifyContent:"space-between",flexDirection:"row",marginTop:10,marginLeft:10,marginRight:5}}>
+                           <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",alignSelf:"center"}}>Department name</Text>
+                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",alignSelf:"center"}}>Form Name</Text>
+                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",alignSelf:"center"}}>Form Status</Text>
+
 
                         </View>
                         :

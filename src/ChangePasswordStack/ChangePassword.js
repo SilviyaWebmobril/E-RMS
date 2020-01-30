@@ -27,7 +27,8 @@ export default class ChangePassword  extends Component {
         loading:false,
         visible:false,
         errorHeading:"",
-        errorDesp:""
+        errorDesp:"",
+        errorStatus:false
     }
 
 
@@ -104,15 +105,19 @@ export default class ChangePassword  extends Component {
                 this.refs.old_password.resetTextInput('password');
                 this.refs.new_password.resetTextInput('password');
                 this.refs.confirm_password.resetTextInput('password');
+                this.setState({errorStatus:true})
 
             }
                 this.setState({visible:true});
                 this.setState({errorHeading:"Change Password"});
                 this.setState({errorDesp:`${response.data.message}`});
+                this.setState({errorStatus:false})
+
            
 
         }).catch(error =>{
             this.setState({loading:true})
+            this.setState({errorStatus:false})
             this.setState({visible:true});
             this.setState({errorHeading:"Change Password"});
             this.setState({errorDesp:"Something went wrong .Please try again later!"});
@@ -134,7 +139,7 @@ export default class ChangePassword  extends Component {
                         <CustomTextInput 
                             ref="old_password"
                             placeholder="Enter Old Password"
-                            text="OLD PASSWORD"
+                            text="Old Password"
                             inputType="password"
                             isPassword={true}
                             changeSecureText={()=> this.changeSecureText} // calling child function directly without ref in component
@@ -144,7 +149,7 @@ export default class ChangePassword  extends Component {
                         <CustomTextInput 
                             ref="new_password"
                             placeholder="Enter New Password"
-                            text="NEW PASSWORD"
+                            text="New Password"
                             inputType="password"
                             isPassword={true}
                             changeSecureText={()=> this.changeSecureText} // calling child function directly without ref in component
@@ -154,7 +159,7 @@ export default class ChangePassword  extends Component {
                         <CustomTextInput 
                             ref="confirm_password"
                             placeholder="Enter Confirm Password"
-                            text="CONFIRM PASSWORD"
+                            text="Confirm Password"
                             inputType="password"
                             isPassword={true}
                             changeSecureText={()=> this.changeSecureText} // calling child function directly without ref in component
@@ -181,7 +186,13 @@ export default class ChangePassword  extends Component {
                         errorHeading={this.state.errorHeading}
                         errorDescription={this.state.errorDesp}
                         cancelVisible={false} 
-                        onOKPress={()=>{this.setState({visible:false})}} />
+                        onOKPress={()=>{
+                            this.setState({visible:false});
+                            if(this.state.errorStatus){
+                                return;
+                            }
+                            this.props.navigation.navigate('HomeScreen');
+                        }}  />
                     :
                     <View/>
                 }

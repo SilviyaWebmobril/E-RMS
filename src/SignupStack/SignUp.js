@@ -33,28 +33,38 @@ export default class SignUp extends Component{
 
     signInHandler = () =>{
 
-        // if(this.refs.email.getInputTextValue('email') == "invalid"){
+        if(this.refs.email.getInputTextValue('name') == "blank"){
 
-        //     this.setState({visible:true});
-        //     this.setState({errorDesp:'Please enter valid email'});
-        //     this.setState({errorHeading:'SignUp'});
-        //     return;
+            this.setState({visible:true});
+            this.setState({errorDesp:'Please enter valid username.'});
+            this.setState({errorHeading:'SignIn'});
+            return;
 
-        // }
+        }
+
+        if(this.refs.email.getInputTextValue('name') == "invalid"){
+
+            this.setState({visible:true});
+            this.setState({errorDesp:'Please enter valid username.'});
+            this.setState({errorHeading:'SignIn'});
+            return;
+
+        }
+
 
         if(this.refs.password.getInputTextValue('password') == "blank"){
 
             this.setState({visible:true});
-            this.setState({errorDesp:'Please enter password'});
-            this.setState({errorHeading:'SignUp'});
+            this.setState({errorDesp:'Please enter password.'});
+            this.setState({errorHeading:'SignIn'});
             return;
         }
 
         if(this.refs.password.getInputTextValue('password') == "invalid"){
 
             this.setState({visible:true});
-            this.setState({errorDesp:'Please enter valid password'});
-            this.setState({errorHeading:'SignUp'});
+            this.setState({errorDesp:'Please enter valid password.'});
+            this.setState({errorHeading:'SignIn'});
             return;
         }
 
@@ -73,7 +83,7 @@ export default class SignUp extends Component{
                    
                     this.setState({visible:true});
                     this.setState({errorDesp:`${response.data.message}`});
-                    this.setState({errorHeading:'SignUp'});
+                    this.setState({errorHeading:'SignIn'});
                 }else{
 
                     AsyncStorage.setItem('id',response.data.result.id.toString());
@@ -88,7 +98,7 @@ export default class SignUp extends Component{
                 this.setState({loading:false})
                 this.setState({visible:true});
                 this.setState({errorDesp:'Something went wrong! Please try again later'});
-                this.setState({errorHeading:'SignUp'});
+                this.setState({errorHeading:'SignIn'});
                 
                
             })
@@ -96,7 +106,7 @@ export default class SignUp extends Component{
             
             this.setState({visible:true});
             this.setState({errorDesp:'Please enter email and password'});
-            this.setState({errorHeading:'SignUp'});
+            this.setState({errorHeading:'SignIn'});
             
         }
         
@@ -117,7 +127,7 @@ export default class SignUp extends Component{
         return(
                       
             <ImageBackground style={styles.imageBck} source={require('../../assets/splash3.png')}>
-                <KeyboardAwareScrollView showsVerticalScrollIndicator={false}> 
+                {/* <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>  */}
                     <View style={styles.box}>
                         <View style={{flex:1}}>
                         <Image source={require('../../assets/logo_small.png')} resizeMode="contain" style={styles.ermslogo} />
@@ -127,7 +137,7 @@ export default class SignUp extends Component{
                             ref="email"   
                             field_text={{marginBottom:5}}
                             placeholder="Enter Username"
-                            text="USERNAME"
+                            text="Username"
                             inputType="name"
                             error_text="Please enter valid username."
                             />
@@ -135,7 +145,7 @@ export default class SignUp extends Component{
                             ref="password"
                            
                             placeholder="Enter Password"
-                            text="PASSWORD"
+                            text="Password"
                             inputType="password"
                             isPassword={true}
                             changeSecureText={()=> this.changeSecureText} // calling child function directly without ref in component
@@ -147,14 +157,14 @@ export default class SignUp extends Component{
                            
                         
                             <CustomButton text=" Sign In " onPressHandler={()=>{this.signInHandler()}} view_button={{backgroundColor:Colors.blue_btn,borderColor:Colors.blue_btn,}} />
-                            <CustomButton text=" Visitor/ Contractor Sign In " onPressHandler={()=>{ this.visitorHandler()}} view_button={{backgroundColor:Colors.black_btn,borderColor:Colors.black_btn,}} />
+                            <CustomButton text=" Visitor / Contractor Sign In " onPressHandler={()=>{ this.visitorHandler()}} view_button={{backgroundColor:Colors.black_btn,borderColor:Colors.black_btn,}} />
                
                
                      
                         </View>
                         
                     </View>
-                </KeyboardAwareScrollView>
+                {/* </KeyboardAwareScrollView> */}
                 { this.state.loading && <View
                      style={[
                        StyleSheet.absoluteFill,

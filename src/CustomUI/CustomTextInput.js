@@ -174,7 +174,7 @@ export class CustomTextInput extends Component {
      
             if(type == "name"){
 
-                if(this.state.controls.name == ""){
+                if(this.state.controls.name.value == ""){
                     return "blank";
                 }else if( this.state.controls.name.valid){
                     return this.state.controls.name.value;

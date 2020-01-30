@@ -47,10 +47,10 @@ export default class CorrectiveAction extends Component {
             this.setState({loading:false})
            
             if(!response.data.error){
-                console.log("response data",response.data.message);
+                
                 this.setState({correctiveLogs:response.data.data});
             }else{
-                console.log("response data122",response.data.message);
+              
                 this.setState({correctiveLogs:[],message:response.data.message},()=>{
                     console.log("xchsnjf",this.state.message);
                 })
@@ -67,7 +67,7 @@ export default class CorrectiveAction extends Component {
     }
 
     onRefresh(){
-        console.log("hellooooooo");
+       
         this.componentDidMount()
     }
 
@@ -76,12 +76,12 @@ export default class CorrectiveAction extends Component {
        
         return(
             <TouchableOpacity  onPress={()=>{ this.props.navigation.navigate('DepartmentForm',{department_id : item.form.id,name :item.form.name,onGoBack:this.onRefresh.bind(this),})}}>
-              <Card containerStyle={{width: Dimensions.get('window').width-20}}>
+              <Card containerStyle={{width: Dimensions.get('window').width-30,justifyContent:"center",flex:1}}>
                   <View style={{flexDirection:"row",justifyContent:"space-between",alignContent:"center",alignItems:"center"}}>
-                  <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
+                  <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15,textAlign:"left"}}>
                         {item.form.department.name}
                     </Text>
-                    <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
+                    <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15,textAlign:"left"}}>
                         {item.form.name}
                     </Text>
                     {/* <TouchableOpacity style={{backgroundColor:'#F7F7F7',marginRight:5,
@@ -90,7 +90,7 @@ export default class CorrectiveAction extends Component {
                         <Image style={{width: 20, height: 20,}}
                         source={require('../../assets/edit.png')} />
                     </TouchableOpacity> */}
-                    <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
+                    <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15,textAlign:"left"}}>
                         Allow Re-Edit
                     </Text>
                   </View>
@@ -109,10 +109,10 @@ export default class CorrectiveAction extends Component {
 
                         {this.state.correctiveLogs.length > 0 
                         ?
-                        <View style={{justifyContent:"space-between",flexDirection:"row",marginTop:10,marginLeft:5,marginRight:5}}>
-                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",alignSelf:"flex-start"}}>Department name</Text>
-                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",}}>Form Name</Text>
-                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",}}>Form Status</Text>
+                        <View style={{justifyContent:"space-between",flexDirection:"row",marginTop:10,marginLeft:10,marginRight:10,alignItems:"center",alignContent:"center"}}>
+                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",alignSelf:"center"}}>Department name</Text>
+                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",alignSelf:"center"}}>Form Name</Text>
+                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",alignSelf:"center"}}>Form Status</Text>
 
                         </View>
                         :

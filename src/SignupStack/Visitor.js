@@ -311,7 +311,7 @@ export  default class Vistor extends Component {
                                     <TouchableOpacity 
                                     //onPress={()=>{this.props.navigation.navigate("GmpPolicies")}}
                                     >
-                                        <Text numberOfLines={2} style={{color:Colors.blue_btn,fontSize:13, fontWeight:"bold",}}>{` GMP and Allgerian Policies`} </Text>
+                                        <Text numberOfLines={2} style={{color:"#42B0F2",fontSize:13, fontWeight:"bold",}}>{` GMP and Allergen Policies`} </Text>
                                     </TouchableOpacity>
                                 </View>
                                

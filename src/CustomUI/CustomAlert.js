@@ -33,7 +33,7 @@ export default class CustomAlert extends Component {
                         }
 
                         <TouchableOpacity onPress={this.props.onOKPress}>
-                            <Text style={styles.okButton}>OK</Text>
+                            <Text style={styles.okButton}>Ok</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

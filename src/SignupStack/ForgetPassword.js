@@ -14,7 +14,7 @@ const height = Dimensions.get('window').height;
 export  default class Vistor extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => ({
-        title: "Forget Password",
+        title: "Forgot Password",
        
       });
 
@@ -33,46 +33,47 @@ export  default class Vistor extends Component {
 
     forgotPassword = () =>{
 
-        if(this.refs.email.getInputTextValue('email') == 'blank'){
+        if(this.refs.email.getInputTextValue('name') == 'blank'){
 
             this.setState({visible:true});
-            this.setState({errorDesp:"Please enter email"});
-            this.setState({errorHeading:'Forget Password'});
+            this.setState({errorDesp:"Please enter username."});
+            this.setState({errorHeading:'Forgot Password'});
 
             return;
         }
 
-        if(this.refs.email.getInputTextValue('email') == 'invalid'){
+        if(this.refs.email.getInputTextValue('name') == 'invalid'){
 
             this.setState({visible:true});
-            this.setState({errorDesp:"Please enter valid email"});
-            this.setState({errorHeading:'Forget Password'});
+            this.setState({errorDesp:"Please enter valid name"});
+            this.setState({errorHeading:'Forgot Password'});
 
             return;
         }
 
         let  formdata = new FormData();
         this.setState({loading:true});
-        formdata.append("email",this.refs.email.getInputTextValue('email'))
+        formdata.append("username",this.refs.email.getInputTextValue('name'))
 
-        if(this.refs.email.getInputTextValue('email') !== "invalid"){
+        if(this.refs.email.getInputTextValue('name') !== "invalid"){
 
             Axios.post(ApiUrl.base_url+ApiUrl.forget_password,formdata).then(response=>{
                 this.setState({loading:false});
+                console.log("response",response.data);
                 
                 if(!response.data.error){
 
                         this.setState({responseError:false})
                         this.setState({visible:true});
                         this.setState({errorDesp:`${response.data.message}`});
-                        this.setState({errorHeading:'Forget Password'});
+                        this.setState({errorHeading:'Forgot Password'});
 
                         
                 }else{
                     this.setState({responseError:true})
                     this.setState({visible:true});
                     this.setState({errorDesp:'Something went wrong ! Please try again later.'});
-                    this.setState({errorHeading:'Forget Password'});
+                    this.setState({errorHeading:'Forgot Password'});
 
                 }
     
@@ -82,7 +83,7 @@ export  default class Vistor extends Component {
                 this.setState({loading:false});
                 this.setState({visible:true});
                 this.setState({errorDesp:"Check your network connection and try again later!"});
-                this.setState({errorHeading:'Forget Password'});
+                this.setState({errorHeading:'Forgot Password'});
             
             })
 
@@ -91,7 +92,7 @@ export  default class Vistor extends Component {
             this.setState({responseError:true})
             this.setState({visible:true});
             this.setState({errorDesp:"Please enter valid email"});
-            this.setState({errorHeading:'Forget Password'});
+            this.setState({errorHeading:'Forgot Password'});
         
         }
      
@@ -105,20 +106,18 @@ export  default class Vistor extends Component {
                 <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.container}>
                     <Image source={require('../../assets/logo_small.png')} resizeMode="contain" style={styles.ermslogo} />
-                    <Text style={styles.textStyle}>Forget Password</Text>
+                    <Text style={styles.textStyle}>Forgot Password</Text>
 
 
                       
-                        <CustomTextInput 
-                        ref="email"
-                        field_text={{marginBottom:10,marginTop:20}}
-                        placeholder="Enter Email"
-                        text="E-Mail Address"
-                        error_text="Please enter valid email"
-                        inputType="email"
-                        
-                        />
-
+                    <CustomTextInput 
+                            ref="email"   
+                            field_text={{marginBottom:5}}
+                            placeholder="Enter Username"
+                            text="Username"
+                            inputType="name"
+                            error_text="Please enter valid username."
+                            />
                     
                         <CustomButton text="Submit" onPressHandler={()=> this.forgotPassword()} btn_style={{height:40}} view_button={{backgroundColor:Colors.blue_btn,borderColor:Colors.blue_btn,}}/>
 

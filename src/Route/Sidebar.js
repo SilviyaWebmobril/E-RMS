@@ -79,7 +79,7 @@ export default class  SideBar extends Component  {
 
         this.setState({visible:true});
         this.setState({errorHeading:"Logout"});
-        this.setState({errorDesp:"Are you sure that you want to logout ?"});
+        this.setState({errorDesp:"Are you sure  you want to logout ?"});
 
         
      }
