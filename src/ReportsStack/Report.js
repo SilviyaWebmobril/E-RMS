@@ -5,17 +5,60 @@ import Axios from 'axios';
 import ApiUrl from '../Utility/ApiUrl';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Card} from 'react-native-elements';
-import Colors from '../Utility/Colors'
+import { formatDateTime } from '../Utility/Colors'
+import { Table, TableWrapper, Row ,Cell} from 'react-native-table-component';
 
-export default class CorrectiveAction extends Component {
+export default class Report extends Component {
 
     constructor(props) {
         super(props);
         this.state={
             reports:[],
             message:"",
-            loading:false
+            loading:false,
+            tableData:[],
+            tableHead: ['Form', 'Department', 'Location', 'Updated By', 'Created On', 'Updated On', 'Form Status'],
+            widthArr: [160, 140, 100, 100, 180, 180, 140]
         }
+    }
+
+    async renderI() {
+        const state = this.state;
+        const tableData = [];
+        for (let i = 0; i < this.state.reports.length; i ++) {
+          const rowData = [];
+          for (let j = 0; j < 8; j += 1) {
+            
+            rowData.push(this.state.reports[i].form.name);
+            rowData.push(this.state.reports[i].form.department.name);
+            rowData.push(this.state.reports[i].location.location);
+            if(this.state.reports[i].last_changed_by == 1){
+                rowData.push("Admin");
+            }else if(this.state.reports[i].last_changed_by == 2){
+                let username = await AsyncStorage.getItem("username");
+                rowData.push(username);
+            }else{
+                rowData.push("QA");
+            }
+           
+            rowData.push(formatDateTime(this.state.reports[i].created_at));
+            rowData.push(formatDateTime(this.state.reports[i].updated_at));
+            if(this.state.reports[i].form_status == 0){
+                rowData.push("Saved");
+            }else if(this.state.reports[i].form_status == 1){
+                rowData.push("Submitted");
+            }else if(this.state.reports[i].form_status == 2){
+                rowData.push("Approved");
+            }else {
+                rowData.push("Rejected");
+            }
+            
+           
+          }
+          tableData.push(rowData);
+          
+        }
+        this.setState({tableData:tableData});
     }
 
      async componentDidMount(){
@@ -31,7 +74,9 @@ export default class CorrectiveAction extends Component {
             this.setState({loading:false})
 
             if(!response.data.error){
-                this.setState({reports:response.data.data});
+                this.setState({reports:response.data.data},()=>{
+                    this.renderI();
+                },);
             }else{
                 this.setState({message:response.data.message})
             }
@@ -46,35 +91,7 @@ export default class CorrectiveAction extends Component {
 
     }
 
-    renderItem(data){
-        let { item, index } = data;
-       
-        return(
-           
-              <Card containerStyle={{width: Dimensions.get('window').width-30,justifyContent:"center",flex:1}}>
-                  <View style={{flexDirection:"row",justifyContent:"space-between",alignContent:"center",alignItems:"center"}}>
-                  <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
-                  {item.form.department.name}
-                    </Text>
-                    <Text style={{justifyContent:"center",alignSelf:"center",color:Colors.blue_btn,fontWeight:"bold",fontSize:15}}>
-                        {item.form.name}
-                    </Text>
-                   {item.form_status == 0
-                   ?
-                    <Text>Save</Text>
-                    :
-                    (item.form_status ==  2
-                    ?
-                    <Text>Approved</Text>
-                    :
-                    <Text>Hold</Text>
-                    )}
-                  </View>
-                </Card>
-         
-        );
-
-      }
+   
 
     render(){
         return(
@@ -82,28 +99,30 @@ export default class CorrectiveAction extends Component {
                 <KeyboardAwareScrollView>
                     <View style={{flex:1}}>
 
-                    {this.state.reports.length > 0 
-                        ?
-                        <View style={{justifyContent:"space-between",flexDirection:"row",marginTop:10,marginLeft:5,marginRight:5}}>
-                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",alignSelf:"center"}}>Department name</Text>
-                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",alignSelf:"center"}}>Form Name</Text>
-                            <Text style={{fontSize:15,color:"black",flex:2,textAlign:"center",fontWeight:"bold",alignSelf:"center"}}>Form Status</Text>
-
+                    <ScrollView horizontal={true}>
+                        <View>
+                            <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+                            <Row data={this.state.tableHead} widthArr={this.state.widthArr} style={styles.header} textStyle={styles.text}/>
+                            </Table>
+                            <ScrollView style={styles.dataWrapper}>
+                            <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+                                {
+                                this.state.tableData.map((rowData, index) => (
+                                  
+                                    <Row
+                                    key={index}
+                                    data={rowData}
+                                    widthArr={this.state.widthArr}
+                                    style={[styles.row, index%2 && {backgroundColor: '#F7F6E7'}]}
+                                    textStyle={styles.text}
+                                    />
+                                ))
+                                }
+                               
+                            </Table>
+                            </ScrollView>
                         </View>
-                        :
-                            <View/>
-                        }
-                      
-                    
-                    
-                    <FlatList
-                        //numColumns={2}
-                        data={this.state.reports}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={(item) =>this.renderItem(item)}
-                        style={{paddingBottom:10}}
-                        //columnWrapperStyle={{flexGrow: 1, justifyContent: 'space-around',marginTop:15}}
-                        />
+                        </ScrollView>
                     </View>
                 
                 </KeyboardAwareScrollView>
@@ -130,3 +149,13 @@ export default class CorrectiveAction extends Component {
 
     
 }
+
+
+
+const styles =  StyleSheet.create({
+    header: { height: 50, backgroundColor: '#537791' },
+    text: { textAlign: 'center', fontWeight: '100' },
+    dataWrapper: { marginTop: -1 },
+    btn: { width: 58, height: 18, backgroundColor: '#78B7BB',  borderRadius: 2 ,},
+    row: { height: 40, backgroundColor: '#E7E6E1' }
+})

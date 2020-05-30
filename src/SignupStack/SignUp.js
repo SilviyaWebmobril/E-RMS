@@ -86,9 +86,11 @@ export default class SignUp extends Component{
                     this.setState({errorHeading:'SignIn'});
                 }else{
 
+                    
                     AsyncStorage.setItem('id',response.data.result.id.toString());
                     AsyncStorage.setItem('roles_id',response.data.result.roles_id.toString());
-                   // AsyncStorage.setItem('email',esponse.data.result.email)
+                    AsyncStorage.setItem('email',response.data.result.email)
+                    AsyncStorage.setItem('username',response.data.result.username);
 
                     this.props.navigation.navigate('HomeDrawer')
                 }

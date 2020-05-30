@@ -6,7 +6,7 @@ import { WebView } from 'react-native-webview';
 import CustomHeaderDepartment from '../CustomUI/CustomHeaderDepartment';
 import AsyncStorage from '@react-native-community/async-storage'
 
-export default class DepartmentForm extends Component {
+export default class EditDepartmentForm extends Component {
 
     static navigationOptions = ({ navigation, screenProps }) => {
         const { params = {} } = navigation.state;
@@ -24,13 +24,14 @@ export default class DepartmentForm extends Component {
 
     async componentDidMount (){
 
+
         const value = await AsyncStorage.getItem('id');
          this.setState({user_id:value})
 
     }
 
     hideSpinner() {
-        console.log("id===>",ApiUrl.base_url+ApiUrl.view_form);
+        
         this.setState({ loading: false });
       }
 
@@ -47,7 +48,7 @@ export default class DepartmentForm extends Component {
 
                      javaScriptEnabled={true}
                         domStorageEnabled={true}
-                    source={{ uri: ApiUrl.base_url+ApiUrl.view_form+`${this.props.navigation.getParam('form_id')}&user_id=${this.state.user_id}&dep_id=${this.props.navigation.getParam('department_id')}&loc_id=${this.props.navigation.getParam('location_id')}`}} 
+                    source={{ uri: ApiUrl.base_url+ApiUrl.edit_form+`${this.props.navigation.getParam('form_id')}&user_id=${this.state.user_id}&dep_id=${this.props.navigation.getParam('department_id')}&loc_id=${this.props.navigation.getParam('location_id')}&ref=${this.props.navigation.getParam('ref')}`}} 
                     onMessage={m => this.onMessage(m)} 
                    />
 

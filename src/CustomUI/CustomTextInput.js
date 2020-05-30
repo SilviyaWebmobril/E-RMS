@@ -292,6 +292,8 @@ export class CustomTextInput extends Component {
     }
 
     render(){
+
+        console.log("def",this.props.defaultValue == "" ? this.state.inputTextValue : this.props.defaultValue); 
       
         return(
             <View style={styles.container}>
@@ -304,7 +306,7 @@ export class CustomTextInput extends Component {
                             secureTextEntry={this.props.isPassword ? this.state.isSecure : false}
                             placeholder={this.props.placeholder}
                             onChangeText={(value)=> this.setTextInputValue(value,this.props.inputType )}
-                            value={this.state.inputTextValue}
+                            value={this.props.defaultValue == "" || this.props.defaultValue  == undefined  ? this.state.inputTextValue : this.props.defaultValue}
                             returnKeyType={this.props.returnKeyType}
                             multiline={this.props.multiline}
                             editable={this.props.editable}

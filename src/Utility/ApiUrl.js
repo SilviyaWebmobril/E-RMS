@@ -10,6 +10,8 @@ export default {
 
     view_form : "view_form?form_id=",
 
+    edit_form :"edit_form?form_id=",
+
     search : "search_department?keyword=",
 
     forget_password : "forgot_password",
@@ -31,6 +33,8 @@ export default {
     hold_release:"hold_release_forms",
 
     reports :"reports",
+
+    view_hold_corrective_forms :"view_hold_corrective_forms",
 
     
 

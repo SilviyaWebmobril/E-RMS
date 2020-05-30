@@ -42,6 +42,8 @@ export default class CustomHeader extends Component {
         Axios.post(ApiUrl.base_url+ApiUrl.search+text+"&user_id="+user_id).then(response=>{
           this.setState({isLoading:false})
 
+          console.log("depart",response.data.data);
+
           if(response.data.error){
 
             this.setState({
@@ -96,9 +98,11 @@ export default class CustomHeader extends Component {
 
       next(item){
         let obj ={
-            'name':item.name,
-            'id':item.id
-        }
+          'name':item.department.name,
+          //'id':item.id,
+          'department_id':item.department_id,
+          'location_id' : item.location_id
+      }
         //alert("passing"+item.value)
         this.props.nav.navigate('Department',{result:obj,onGoBack: () => this.onRefresh(),})
     }
@@ -140,12 +144,19 @@ export default class CustomHeader extends Component {
                       ItemSeparatorComponent={this.ListViewItemSeparator}
                       //Item Separator View
                       renderItem={({ item }) => {
+                       
                           // Single Comes here which will be repeatative for the FlatListItems
-                         return (
-                          <TouchableOpacity onPress={()=>{this.next(item)}} style={{padding:10,backgroundColor:"#ececec"}}>
-                            <Text style={styles.textStyle}>{item.name}</Text>
-                          </TouchableOpacity>
-                         ) 
+                          
+                          let views = [];
+                          item.departments.map(row => {
+                              views.push(
+                                <TouchableOpacity onPress={()=>{this.next(row)}} style={{padding:10,backgroundColor:"#ececec"}}>
+                                  <Text style={styles.textStyle}>{row.department.name}</Text>
+                                </TouchableOpacity>
+                              )
+                          });
+                          return views;
+                        
                       }}
                        // contentContainerStyle={styles.searchStyle}
                        enableEmptySections={true}

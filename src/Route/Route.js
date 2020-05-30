@@ -24,6 +24,7 @@ import RejectedForm from '../ApprovedFormStack/RejectedForm';
 import CorrectiveAction from '../CorrectiveStack/CorrectiveAction';
 import Report from '../ReportsStack/Report';
 import HoldRelease from '../HoldReleaseStack/HoldRelease'
+import EditDepartmentForm from '../HomeStack/EditDepartmentForm';
 
 
 const homeStack = createStackNavigator({
@@ -222,8 +223,8 @@ const approvedRejectedFormStack = createStackNavigator({
        
     }
     ,
-    DepartmentForm:{
-        screen:  DepartmentForm,
+    EditDepartmentForm:{
+        screen:  EditDepartmentForm,
     }
   
 
@@ -252,7 +253,7 @@ const savedSubmittedStack = createStackNavigator({
     
         // }),
     },
-    DepartmentForm,
+    EditDepartmentForm,
 
 })
 

@@ -51,9 +51,9 @@ export default class Home extends Component {
         formdata.append("role_id",JSON.parse(rolesid));
         console.log("formdata",formdata);
         Axios.post(ApiUrl.base_url+ApiUrl.departments,formdata).then(response =>{
+
             this.setState({loading:false})
 
-            console.log("response -->",response);
            
             if(response.data.error){
 
@@ -77,21 +77,46 @@ export default class Home extends Component {
     next(item){
         let obj ={
             'name':item.name,
-            'id':item.id
+            'id':item.id,
+            'department_id':item.department_id,
+            'location_id' : item.location_id
         }
         //alert("passing"+item.value)
         this.props.navigation.navigate('Department',{result:obj,onGoBack: () => this.onRefresh(),})
     }
 
-    renderItem(data){
+    renderLocationItem(data){
         let { item, index } = data;
        
         return(
+            <>
+                <Text style={{fontSize:17,fontWeight:'bold',paddingLeft:10}}>{item.location}</Text>
+                <FlatList
+                    numColumns={2}
+                    data={item.departments}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={(item) =>this.renderDepartmentItem(item)}
+                    style={{paddingBottom:10}}
+                    columnWrapperStyle={{flexGrow: 1, justifyContent: 'space-around',marginTop:15}}
+                    />
+            </>
+           
+        );
+    }
+
+    renderDepartmentItem(data) {
+
+        let { item, index } = data;
+      
+       
+        return(
             <TouchableOpacity onPress={()=>{this.next(item)}}>
-                <CategoryItem data={item} />
+                <CategoryItem data={item.department} />
+                
             </TouchableOpacity>
            
         );
+
     }
 
     render(){
@@ -106,12 +131,12 @@ export default class Home extends Component {
                         {this.state.department.length > 0
                         ?
                         <FlatList
-                        numColumns={2}
+                        //numColumns={2}
                         data={this.state.department}
                         keyExtractor={(item, index) => index.toString()}
-                        renderItem={(item) =>this.renderItem(item)}
+                        renderItem={(item) =>this.renderLocationItem(item)}
                         style={{paddingBottom:10}}
-                        columnWrapperStyle={{flexGrow: 1, justifyContent: 'space-around',marginTop:15}}
+                        //columnWrapperStyle={{flexGrow: 1, justifyContent: 'space-around',marginTop:15}}
                         />
                         :
                         <View style={{justifyContent:'center',flex:1}}>

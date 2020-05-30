@@ -6,6 +6,7 @@ import Colors from '../Utility/Colors';
 export default class CategoryItem extends Component {
 
     render(){
+
         return(
             <View style={styles.blueBoxes}>
                 <Text style={styles.textStyle}>{this.props.data.name}</Text>

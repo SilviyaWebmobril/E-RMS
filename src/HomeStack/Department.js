@@ -39,18 +39,21 @@ export default class Department extends Component {
             this.componentDidMount();
         }
 
-      componentDidMount(){
+      async componentDidMount(){
 
         this.setState({correctiveAction:false,forms:[],holdAction:false,message:"",loading:true},()=>{
             //
          });
          
-
+         let userid =  await AsyncStorage.getItem('id');
         var formdata = new FormData();
-
-        formdata.append("department_id",this.props.navigation.getParam('result')['id']);
+        
+        formdata.append("department_id",this.props.navigation.getParam('result')['department_id']);
+        formdata.append("location_id",this.props.navigation.getParam('result')['location_id'])
+        console.log("response formdata",formdata);
         Axios.post(ApiUrl.base_url+ApiUrl.view_department_form,formdata).then(response=>{
 
+            console.log("response dept",response.data);
             this.setState({loading:false})
             if(response.data.error){
                 this.setState({message:`${response.data.message}`})
@@ -109,7 +112,11 @@ export default class Department extends Component {
              
         return(
 
-            <TouchableOpacity  onPress={()=>{ this.props.navigation.navigate('DepartmentForm',{department_id : item.id,name :item.name,onGoBack: () => this.onRefresh(),})}}>
+            <TouchableOpacity  onPress={()=>{ this.props.navigation.navigate('DepartmentForm',{ 
+                department_id : item.department_id,
+                name :item.name,
+                form_id:item.id,
+                location_id:this.props.navigation.getParam('result')['location_id'],onGoBack: () => this.onRefresh(),})}}>
                 <CategoryItem data={item} />
             </TouchableOpacity>
            
